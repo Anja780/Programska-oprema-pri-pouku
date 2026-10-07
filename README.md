@@ -17,9 +17,10 @@ Gradivo in izdelki pri predmetu Programska oprema pri pouku na Fakulteti za mate
 
 Contents:
 - Initial README
-- [Kratek pregled snovi matematike](Pregled-snovi-matematika.md)
+- [Pregled snovi: racionalne funkcije](Pregled-snovi-matematika-racionalne-funkcije.md)
 - [Preizkus znanja: racionalne funkcije](Preizkus-racionalne-funkcije.md)
 - [Rešitve in točkovnik preizkusa](Resitve-preizkusa-racionalne-funkcije.md)
+- [Handoff projekta](HANDOFF.md)
 
 Instructions:
 Add your project files in the repository root or in a suitable subfolder (e.g., src/) and commit changes.
