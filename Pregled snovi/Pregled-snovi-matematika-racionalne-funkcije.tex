@@ -9,6 +9,67 @@
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{tikz}
+\usepackage[most]{tcolorbox}
+
+\newtcolorbox{primerbox}[1][]{%
+  enhanced,
+  breakable,
+  colback=red!7,
+  colframe=red!70!black,
+  boxrule=0pt,
+  arc=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  colbacktitle=red!70!black,
+  coltitle=white,
+  fonttitle=\bfseries\large,
+  title=PRIMER,
+  attach boxed title to top left={xshift=0mm,yshift=-\tcboxedtitleheight/2},
+  boxed title style={boxrule=0pt, arc=0pt, colback=red!70!black},
+  #1
+}
+
+\newtcolorbox{zgledbox}[1][]{%
+  enhanced,
+  breakable,
+  colback=blue!7,
+  colframe=blue!70!black,
+  boxrule=0pt,
+  arc=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  colbacktitle=blue!70!black,
+  coltitle=white,
+  fonttitle=\bfseries\large,
+  title=ZGLED,
+  attach boxed title to top left={xshift=0mm,yshift=-\tcboxedtitleheight/2},
+  boxed title style={boxrule=0pt, arc=0pt, colback=blue!70!black},
+  #1
+}
+
+\newtcolorbox{napakabox}[1][]{%
+  enhanced,
+  breakable,
+  colback=yellow!12,
+  colframe=yellow!60!black,
+  boxrule=0pt,
+  arc=0pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  colbacktitle=yellow!60!black,
+  coltitle=white,
+  fonttitle=\bfseries\large,
+  title=POGOSTE NAPAKE,
+  attach boxed title to top left={xshift=0mm,yshift=-\tcboxedtitleheight/2},
+  boxed title style={boxrule=0pt, arc=0pt, colback=yellow!60!black},
+  #1
+}
 
 \title{Racionalne funkcije -- kratek pregled za učenje}
 \date{}
@@ -25,7 +86,7 @@ Racionalna funkcija je količnik dveh polinomov:
 \[
  f(x)=\frac{P(x)}{Q(x)},\qquad Q(x)\ne 0.
 \]
-Definicijsko območje dobimo tako, da iz množice realnih števil izločimo vse ničle imenovalca $Q(x)$. Polinomske funkcije in potenčne funkcije z negativnim celim eksponentom so posebni primeri racionalnih funkcij.
+\textbf{Definicijsko območje} dobimo tako, da iz množice realnih števil izločimo vse ničle imenovalca $Q(x)$. Polinomske funkcije in potenčne funkcije z negativnim celim eksponentom so posebni primeri racionalnih funkcij.
 
 \textbf{Pomembno:} ulomke krajšamo šele po razcepu na faktorje. Krajšanje ne vrne izločenih vrednosti v definicijsko območje.
 
@@ -37,11 +98,12 @@ Definicijsko območje dobimo tako, da iz množice realnih števil izločimo vse 
   \item \textbf{Luknja:} če se isti faktor v števcu in imenovalcu pokrajša, ostane ta $x$ kljub temu izločen iz definicijskega območja. Ordinato luknje dobimo tako, da izločeno vrednost vstavimo v poenostavljeni predpis.
 \end{itemize}
 
-\textbf{Zgled:}
+\begin{zgledbox}
 \[
  g(x)=\frac{x^2-4}{x^2-x-2}=\frac{(x-2)(x+2)}{(x-2)(x+1)}=\frac{x+2}{x+1},
 \]
 pri čemer sta $x=-1$ in $x=2$ izločeni. Pri $x=-1$ je pol, pri $x=2$ pa luknja z ordinato $\frac{2+2}{2+1}=\frac{4}{3}$. Torej je $D_g=\mathbb{R}\setminus\{-1,2\}$ in luknja je $\left(2,\frac{4}{3}\right)$.
+\end{zgledbox}
 
 \section{Asimptote}
 
@@ -64,11 +126,12 @@ Racionalno funkcijo z linearnim števcem in imenovalcem lahko po preoblikovanju 
 kjer so $p,q,k$ konstante. Potem je $x=p$ navpična asimptota, $y=q$ pa vodoravna asimptota.
 
 \vspace{0.3cm}
-\textbf{Zgled:}
+\begin{zgledbox}
 \[
  f(x)=\frac{2x+1}{x-2}=2+\frac{5}{x-2}.
 \]
 Asimptoti sta $x=2$ in $y=2$, ničla je $x=-\frac{1}{2}$, presečišče grafa z osjo $y$ pa je $f(0)=-\frac{1}{2}$.
+\end{zgledbox}
 
 \section{Kako analiziramo in skiciramo graf?}
 
@@ -83,7 +146,8 @@ Za pregledno skico grafa racionalne funkcije sledimo tem korakom:
   \item Nariši asimptote črtkano, označi značilne točke in skiciraj veje grafa. Po potrebi preveri vrednosti funkcije na vsaki strani pola ali uporabi grafični program.
 \end{enumerate}
 
-\textbf{Zgled za risanje:} Naj bo
+\begin{zgledbox}
+Naj bo
 \[
   f(x)=\frac{2x+1}{x-2}.
 \]
@@ -121,6 +185,7 @@ Najprej določimo, kje funkcija ni definirana: imenovalec je $x-2$, zato je $x\n
     \]
 \end{itemize}
 Zdaj vemo: graf ima navpično asimptoto $x=2$, vodoravno asimptoto $y=2$, ničlo v $\left(-\frac{1}{2},0\right)$ in presečišče z osjo $y$ v $\left(0,-\frac{1}{2}\right)$. Nato lahko izračunamo še nekaj vrednosti, na primer $f(1)$ in $f(3)$, da določimo potek vej na intervalih $(-\infty,2)$ in $(2,\infty)$.
+\end{zgledbox}
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -150,6 +215,8 @@ Zdaj vemo: graf ima navpično asimptoto $x=2$, vodoravno asimptoto $y=2$, ničlo
 
 \section{Racionalne enačbe}
 
+Presečišče grafov dveh racionalnih funkcij poiščemo tako, da rešimo enačbo $f(x)=g(x)$ in nato preverimo pogoje obeh funkcij.
+
 \subsection{Postopek}
 
 \begin{enumerate}[leftmargin=*]
@@ -159,7 +226,8 @@ Zdaj vemo: graf ima navpično asimptoto $x=2$, vodoravno asimptoto $y=2$, ničlo
   \item Preveri, ali rešitve zadoščajo začetnim pogojem, nato jih vstavimo v začetni izraz.
 \end{enumerate}
 
-\textbf{Zgled:} Reši enačbo
+\begin{zgledbox}
+Reši enačbo
 \[
  \frac{2x+1}{x-1}=3.
 \]
@@ -172,8 +240,7 @@ Zdaj uporabimo 2. točko postopka in pomnožimo z $x-1$:
  2x+1=3(x-1)\Rightarrow 2x+1=3x-3\Rightarrow x=4.
 \]
 Preverimo 4. točko postopka: $4\ne 1$, zato je rešitev $x=4$.
-
-Presečišče grafov dveh racionalnih funkcij poiščemo tako, da rešimo enačbo $f(x)=g(x)$ in nato preverimo pogoje obeh funkcij.
+\end{zgledbox}
 
 \section{Racionalne neenačbe}
 
@@ -182,15 +249,12 @@ Presečišče grafov dveh racionalnih funkcij poiščemo tako, da rešimo enačb
 \subsubsection*{1. Vse prestavi na eno stran in izraz zapiši kot en ulomek}
 Najprej moraš imeti vse na eni strani, tako da je na drugi strani samo 0.
 
-To pomeni:
-\begin{itemize}[leftmargin=*]
-  \item ne enačbo ne pišeš v takšni obliki, da imaš deljeno število na obeh straneh,
-  \item ampak jo preoblikuješ tako, da ostane en sam ulomek, npr.
-\end{itemize}
+\begin{primerbox}
+Neenačba
 \[
 \frac{x-1}{x+2}\ge 3
 \]
-ni še v dobri obliki, ker je na desni strani število 3. Zato prepišemo:
+še ni v dobri obliki, ker je na desni strani število 3. Zato prepišemo:
 \[
 \frac{x-1}{x+2}-3\ge 0
 \]
@@ -211,6 +275,7 @@ Zdaj je neenačba v formi:
 \]
 
 To je pomembno, ker potem lahko gledamo samo predznak števca in imenovalca.
+\end{primerbox}
 
 \subsubsection*{2. Poišči ničle števca in imenovalca}
 Tu poiščemo vse vrednosti $x$, kjer se ulomek spremeni. To so vrednosti, pri katerih je števec enak 0 ali imenovalec enak 0.
@@ -219,33 +284,33 @@ Tu poiščemo vse vrednosti $x$, kjer se ulomek spremeni. To so vrednosti, pri k
   \item če je števec 0, je cel ulomek 0;
   \item če je imenovalec 0, ulomek ni definiran.
 \end{itemize}
-\textbf{Primer:}
+\begin{primerbox}
 \[
 \frac{x-1}{x+2}
 \]
-števca ni 0, ko je $x-1=0$, zato $x=1$; imenovalec ni 0, ko je $x+2=0$, zato $x=-2$.
+Števec je enak $0$, ko je $x-1=0$, zato $x=1$. Imenovalec je enak $0$, ko je $x+2=0$, zato $x=-2$.
 
 Te vrednosti razdelijo številsko os na intervale.
+\end{primerbox}
 
 \subsubsection*{3. Ugotovi predznak ulomka na vsakem intervalu}
 Nato vzameš eno testno število iz vsakega intervala in ga vstaviš v ulomek. Preveriš, ali je rezultat pozitiven ali negativen.
 
-\textbf{Primer:}
+\begin{primerbox}
 \[
 \frac{x-1}{x+2}
 \]
 Vzamemo $x=-3$, $x=0$, $x=2$:
 \[
 \frac{-3-1}{-3+2}=\frac{-4}{-1}=4>0,
-\]
-\[
+\qquad
 \frac{0-1}{0+2}=\frac{-1}{2}<0,
-\]
-\[
+\qquad
 \frac{2-1}{2+2}=\frac{1}{4}>0.
 \]
 
-Tako dobimo predznake +, -, +.
+Tako dobimo predznake $+$, $-$, $+$.
+\end{primerbox}
 
 \subsubsection*{4. Izberi intervale z zahtevanim predznakom}
 Po tem primerjamo predznake z neenačbo.
@@ -256,16 +321,17 @@ Po tem primerjamo predznake z neenačbo.
   \item Ničle števca se vključijo pri $\ge 0$ ali $\le 0$.
   \item Pol pa se nikoli ne vključi, ker ulomek tam ne obstaja.
 \end{itemize}
-\textbf{Primer:}
+\begin{primerbox}
 \[
 \frac{x-1}{x+2}\ge 0
 \]
-je pozitiven na intervalih $(-\infty,-2)$ in $(1,\infty)$. Ker je neenačba $\ge 0$, vključimo tudi $x=1$. Pol $x=-2$ izključimo.
+Ulomek je pozitiven na intervalih $(-\infty,-2)$ in $(1,\infty)$. Ker je neenačba $\ge 0$, vključimo tudi $x=1$. Pol $x=-2$ izključimo.
 
 Rešitev je:
 \[
 \boxed{(-\infty,-2)\cup[1,\infty)}.
 \]
+\end{primerbox}
 
 Neenačbo lahko rešimo tudi grafično: določimo, kje je graf nad osjo $x$ (za $>0$ oziroma $\ge 0$) ali pod njo (za $<0$ oziroma $\le 0$), pri tem pa izločimo pole.
 
@@ -276,7 +342,8 @@ Racionalna funkcija lahko opisuje obratno sorazmerje ali situacijo, kjer se razm
 \subsubsection*{1. Določi neznanko in njeno enoto}
 Najprej razumeš, kaj je neznanka. To je tisto, kar iščemo.
 
-\textbf{Primer:}
+\begin{primerbox}
+Nekaj neznank in njihovih enot:
 \begin{itemize}[leftmargin=*]
   \item čas v urah,
   \item hitrost v km/h,
@@ -286,58 +353,62 @@ Najprej razumeš, kaj je neznanka. To je tisto, kar iščemo.
 \end{itemize}
 Zapisati moraš tudi enoto, ker brez enote besedilna naloga ni popolna.
 
-\textbf{Primer:}
-\begin{itemize}[leftmargin=*]
-  \item “Koliko časa potrebuje vozilo za prevoz 180 km pri hitrosti 60 km/h?”
-  \item Tu je neznanka čas $t$ v urah.
-\end{itemize}
-Če neznanke ne določiš pravilno, se vse ostalo zmede.
+\textbf{Naloga:} “Koliko časa potrebuje vozilo za prevoz 180 km pri hitrosti 60 km/h?”
+
+Tu je neznanka čas $t$ v urah.
+\end{primerbox}
 
 \subsubsection*{2. Zapiši zvezo med količinami kot enačbo ali funkcijo}
 Naslednji korak je zapisati, kako so količine povezane. Pri obratnem sorazmerju se pogosto pojavi ulomek, saj se ena količina poveča, druga pa zmanjša. Najpogosteje se pojavijo oblike kot $t=\frac{W}{v}$, $y=\frac{k}{x}$ ali $P=\frac{d}{t}$.
 
-\textbf{Primer:}
-\begin{itemize}[leftmargin=*]
-  \item Pri delu velja $t=\frac{W}{v}$, kjer je $W$ skupno opravilo, $v$ hitrost dela in $t$ potreben čas.
-  \item Če je delo enako, potem večja hitrost pomeni krajši čas. To je tipičen primer obratnega sorazmerja.
-\end{itemize}
+\begin{primerbox}
+Pri delu velja
+\[
+ t=\frac{W}{v},
+\]
+kjer je $W$ skupno opravilo, $v$ hitrost dela in $t$ potreben čas. Če je delo enako, potem večja hitrost pomeni krajši čas. To je tipičen primer obratnega sorazmerja.
+
 Zveza mora ostati enaka realni situaciji, ne le matematična oblika.
+\end{primerbox}
 
 \subsubsection*{3. Upoštevaj smiselne pogoje}
 V realnih nalogah ne smemo pozabiti na pogoje, ki so smiselni. Na primer: čas, razdalja, količina in hitrosti so običajno pozitivni. Imenovalec ne sme biti nič, ker deljenje z 0 ni definirano. To so pogoji, ki omejujejo možne vrednosti spremenljivke.
 
-\textbf{Primer:}
-\begin{itemize}[leftmargin=*]
-  \item Če je $t=\frac{W}{v}$, potem mora veljati $v>0$, saj hitrost ne more biti 0.
-  \item Če bi bilo $v=0$, formula ne bi imela smisla, ker delimo z 0.
-  \item Podobno velja za čas: $t>0$.
-\end{itemize}
+\begin{primerbox}
+Če je
+\[
+ t=\frac{W}{v},
+\]
+potem mora veljati $v>0$, saj hitrost ne more biti 0. Če bi bilo $v=0$, formula ne bi imela smisla, ker delimo z 0. Podobno velja za čas: $t>0$.
+
 Model je dober le, če so vsi pogoji resnični in smiselni.
+\end{primerbox}
 
 \subsubsection*{4. Izračunaj rešitev in jo razloži v kontekstu}
 Ko imaš enačbo ali funkcijo, rešitev izračunaš kot običajno. Po tem pa jo ne prepišeš le kot številko, ampak jo razložiš tudi v besedah. Vprašaj se: “Kaj ta številka pomeni v resničnem življenju?”
 
-\textbf{Primer:}
-\begin{itemize}[leftmargin=*]
-  \item Če je $t=\frac{180}{60}$, potem je $t=3$.
-  \item To pomeni, da bo vozilo porabilo 3 ure za prevoz 180 km pri hitrosti 60 km/h.
-\end{itemize}
+\begin{primerbox}
+Če je
+\[
+ t=\frac{180}{60},
+\]
+potem je $t=3$. To pomeni, da bo vozilo porabilo 3 ure za prevoz 180 km pri hitrosti 60 km/h.
+
 Ni dovolj samo zapisati $t=3$; treba je dodati tudi pomen tega rezultata.
+\end{primerbox}
 
 \subsubsection*{5. Presodi, ali model in odgovor ustrezata stvarni situaciji}
 Na koncu preverimo, ali je rezultat smiseln. Včasih formula deluje matematično, a ne ustreza realnosti. Zato presodimo, ali je odgovor primeren, ali so pogoji veljavni in ali je model uporaben za to situacijo.
 
-\textbf{Primer:}
-\begin{itemize}[leftmargin=*]
-  \item Če izračunaš, da je čas $t=-2$ ure, to ni smiselno, saj čas ni negativno število.
-  \item Tak rezultat pomeni, da je bil model napačen ali da je bil izbran napačen predpis.
-  \item Podobno je, če bi dobil $v=0$ v formuli $t=\frac{W}{v}$, to ni smiselno, ker delimo z 0.
-\end{itemize}
+\begin{primerbox}
+Če izračunaš, da je čas $t=-2$ ure, to ni smiselno, saj čas ni negativno število. Tak rezultat pomeni, da je bil model napačen ali da je bil izbran napačen predpis. Podobno je, če bi dobil $v=0$ v formuli $t=\frac{W}{v}$, to ni smiselno, ker delimo z 0.
+\end{primerbox}
 
-\textbf{Zgled:} Za stalno opravljeno delo velja $t=\frac{W}{v}$, kjer je $W$ obseg dela, $v$ hitrost dela in $t$ potreben čas. Če se hitrost poveča, se potreben čas zmanjša. Formula ima smisel za $v>0$.
+\begin{zgledbox}
+Za stalno opravljeno delo velja $t=\frac{W}{v}$, kjer je $W$ obseg dela, $v$ hitrost dela in $t$ potreben čas. Če se hitrost poveča, se potreben čas zmanjša. Formula ima smisel za $v>0$.
+\end{zgledbox}
 
-\section{Pogoste napake}
-
+\begin{napakabox}
 Na hitro: ko si negotov, se vrni k enemu od teh primerov.
 
 \begin{itemize}[leftmargin=*]
@@ -378,5 +449,6 @@ Na hitro: ko si negotov, se vrni k enemu od teh primerov.
     \end{itemize}
     Kratko: pol pomeni, da se graf »raztrga«, luknja pomeni prazno točko, asimptota pa pomeni, da se graf samo približuje črti.
 \end{itemize}
+\end{napakabox}
 
 \end{document}
