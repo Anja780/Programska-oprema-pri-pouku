@@ -6,9 +6,9 @@ Dodajajte datoteke projekta v koren repozitorija ali v primerno podmapo ter nato
 
 Vsebina:
 - README datoteka
-- [Pregled snovi: racionalne funkcije](Pregled-snovi-matematika-racionalne-funkcije.md)
-- [Preizkus znanja: racionalne funkcije](Preizkus-racionalne-funkcije.md)
-- [Rešitve in točkovnik preizkusa](Resitve-preizkusa-racionalne-funkcije.md)
+- [Pregled snovi: racionalne funkcije](Pregled%20snovi/Pregled-snovi-matematika-racionalne-funkcije.md)
+- [Preizkus znanja: racionalne funkcije](Preizkus/Preizkus-racionalne-funkcije.md)
+- [Rešitve in točkovnik preizkusa](Re%C5%A1itve/Resitve-preizkusa-racionalne-funkcije.md)
 - [Handoff projekta](HANDOFF.md)
 
 
