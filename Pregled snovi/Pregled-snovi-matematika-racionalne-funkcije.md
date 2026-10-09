@@ -40,6 +40,7 @@ f(x)=q+\frac{k}{x-p},\qquad k\ne 0,
 \]
 kjer so $p,q,k$ konstante. Potem je $x=p$ navpična asimptota, $y=q$ pa vodoravna asimptota.
 
+
 **Zgled:**
 \[
 f(x)=\frac{2x+1}{x-2}=2+\frac{5}{x-2}.
@@ -104,15 +105,19 @@ Zdaj vemo: graf ima navpično asimptoto $x=2$, vodoravno asimptoto $y=2$, ničlo
 3. Reši dobljeno enačbo.
 4. Preveri, ali rešitve zadoščajo začetnim pogojem, nato jih vstavimo v začetni izraz.
 
-**Zgled:**
+**Zgled:** Reši enačbo
 \[
-\frac{2x+1}{x-1}=3,\qquad x\ne 1.
+\frac{2x+1}{x-1}=3.
 \]
-Pomnožimo z $x-1$:
+Uporabili smo 1. točko postopka: pogoji so, da imenovalec ne sme biti nič, torej
+\[
+x-1\ne 0\quad\Rightarrow\quad x\ne 1.
+\]
+Zdaj uporabimo 2. točko postopka in pomnožimo z $x-1$:
 \[
 2x+1=3(x-1)\Rightarrow 2x+1=3x-3\Rightarrow x=4.
 \]
-Ker $4\ne 1$, je rešitev $x=4$.
+Preverimo 4. točko postopka: $4\ne 1$, zato je rešitev $x=4$.
 
 Presečišče grafov dveh racionalnih funkcij poiščemo tako, da rešimo enačbo $f(x)=g(x)$ in nato preverimo pogoje obeh funkcij.
 
@@ -120,12 +125,88 @@ Presečišče grafov dveh racionalnih funkcij poiščemo tako, da rešimo enačb
 
 ### Postopek z intervali predznakov
 
-1. Vse prestavi na eno stran in izraz zapiši kot en ulomek.
-2. Poišči ničle števca in imenovalca. To so kritične vrednosti, ki razdelijo številsko os na intervale.
-3. Ugotovi predznak ulomka na vsakem intervalu.
-4. Izberi intervale z zahtevanim predznakom. Ničle števca vključi pri $\leq$ ali $\geq$, pole pa vedno izključi.
+### 1. Vse prestavi na eno stran in izraz zapiši kot en ulomek
+Najprej moraš imeti vse na eni strani, tako da je na drugi strani samo 0.
 
-**Zgled:** Rešimo $\frac{x-1}{x+2}\ge 0$. Kritični vrednosti sta $-2$ (pol, izločen) in $1$ (ničla števca, vključena). Ulomek je nenegativen na zunanjih intervalih, zato
+To pomeni:
+
+- ne enačbo ne pišeš v takšni obliki, da imaš deljeno število na obeh straneh,
+- ampak jo preoblikuješ tako, da ostane en sam ulomek, npr.
+\[
+\frac{x-1}{x+2}\ge 3
+\]
+ni še v dobri obliki, ker je na desni strani število 3. Zato prepišemo:
+\[
+\frac{x-1}{x+2}-3\ge 0
+\]
+in to združimo v en ulomek:
+\[
+\frac{x-1-3(x+2)}{x+2}\ge 0
+\]
+\[
+\frac{x-1-3x-6}{x+2}\ge 0
+\]
+\[
+\frac{-2x-7}{x+2}\ge 0.
+\]
+
+Zdaj je neenačba v formi:
+\[
+\frac{\text{nek polinom}}{\text{drug polinom}} \ge 0.
+\]
+
+To je pomembno, ker potem lahko gledamo samo predznak števca in imenovalca.
+
+### 2. Poišči ničle števca in imenovalca
+Tu poiščemo vse vrednosti $x$, kjer se ulomek spremeni. To so vrednosti, pri katerih je števec enak 0 ali imenovalec enak 0.
+
+- če je števec 0, je cel ulomek 0;
+- če je imenovalec 0, ulomek ni definiran.
+
+Primer:
+\[
+\frac{x-1}{x+2} 
+\]
+števca ni 0, ko je $x-1=0$, zato $x=1$;
+imenovalec ni 0, ko je $x+2=0$, zato $x=-2$.
+
+Te vrednosti razdelijo številsko os na intervale.
+
+### 3. Ugotovi predznak ulomka na vsakem intervalu
+Nato vzameš eno testno število iz vsakega intervala in ga vstaviš v ulomek. Preveriš, ali je rezultat pozitiven ali negativen.
+
+Primer:
+\[
+\frac{x-1}{x+2}
+\]
+Vzamemo $x=-3$, $x=0$, $x=2$:
+\[
+\frac{-3-1}{-3+2}=\frac{-4}{-1}=4>0,
+\]
+\[
+\frac{0-1}{0+2}=\frac{-1}{2}<0,
+\]
+\[
+\frac{2-1}{2+2}=\frac{1}{4}>0.
+\]
+
+Tako dobimo predznake +, -, +.
+
+### 4. Izberi intervale z zahtevanim predznakom
+Po tem primerjamo predznake z neenačbo.
+
+- Če je $>0$ ali $\ge 0$, izberemo pozitivne intervale.
+- Če je $<0$ ali $\le 0$, izberemo negativne intervale.
+- Ničle števca se vključijo pri $\ge 0$ ali $\le 0$.
+- Pol pa se nikoli ne vključi, ker ulomek tam ne obstaja.
+
+Primer:
+\[
+\frac{x-1}{x+2}\ge 0
+\]
+je pozitiven na intervalih $(-\infty,-2)$ in $(1,\infty)$. Ker je neenačba $\ge 0$, vključimo tudi $x=1$. Pol $x=-2$ izključimo.
+
+Rešitev je:
 \[
 \boxed{(-\infty,-2)\cup[1,\infty)}.
 \]
@@ -136,11 +217,65 @@ Neenačbo lahko rešimo tudi grafično: določimo, kje je graf nad osjo $x$ (za 
 
 Racionalna funkcija lahko opisuje obratno sorazmerje ali situacijo, kjer se razmerje spreminja z eno spremenljivko. Pri besedilni nalogi:
 
-1. določi neznanko in njeno enoto;
-2. zapiši zvezo med količinami kot enačbo ali funkcijo;
-3. upoštevaj smiselne pogoje (npr. čas in količina sta pozitivna, imenovalec ni nič);
-4. izračunaj rešitev in jo razloži v kontekstu;
-5. presodi, ali model in odgovor ustrezata stvarni situaciji.
+### 1. Določi neznanko in njeno enoto
+Najprej razumeš, kaj je neznanka. To je tisto, kar iščemo.
+
+Primer:
+
+- čas v urah,
+- hitrost v km/h,
+- število delavcev,
+- količina vode v litrih,
+- cena v evrih.
+
+Zapisati moraš tudi enoto, ker brez enote besedilna naloga ni popolna.
+
+Primer:
+
+- “Koliko časa potrebuje vozilo za prevoz 180 km pri hitrosti 60 km/h?”
+- Tu je neznanka čas $t$ v urah.
+
+Če neznanke ne določiš pravilno, se vse ostalo zmede.
+
+### 2. Zapiši zvezo med količinami kot enačbo ali funkcijo
+Naslednji korak je zapisati, kako so količine povezane. Pri obratnem sorazmerju se pogosto pojavi ulomek, saj se ena količina poveča, druga pa zmanjša. Najpogosteje se pojavijo oblike kot $t=\frac{W}{v}$, $y=\frac{k}{x}$ ali $P=\frac{d}{t}$.
+
+Primer:
+
+- Pri delu velja $t=\frac{W}{v}$, kjer je $W$ skupno opravilo, $v$ hitrost dela in $t$ potreben čas.
+- Če je delo enako, potem večja hitrost pomeni krajši čas. To je tipičen primer obratnega sorazmerja.
+
+Zveza mora ostati enaka realni situaciji, ne le matematična oblika.
+
+### 3. Upoštevaj smiselne pogoje
+V realnih nalogah ne smemo pozabiti na pogoje, ki so smiselni. Na primer: čas, razdalja, količina in hitrosti so običajno pozitivni. Imenovalec ne sme biti nič, ker deljenje z 0 ni definirano. To so pogoji, ki omejujejo možne vrednosti spremenljivke.
+
+Primer:
+
+- Če je $t=\frac{W}{v}$, potem mora veljati $v>0$, saj hitrost ne more biti 0.
+- Če bi bilo $v=0$, formula ne bi imela smisla, ker delimo z 0.
+- Podobno velja za čas: $t>0$.
+
+Model je dober le, če so vsi pogoji resnični in smiselni.
+
+### 4. Izračunaj rešitev in jo razloži v kontekstu
+Ko imaš enačbo ali funkcijo, rešitev izračunaš kot običajno. Po tem pa jo ne prepišeš le kot številko, ampak jo razložiš tudi v besedah. Vprašaj se: “Kaj ta številka pomeni v resničnem življenju?”
+
+Primer:
+
+- Če je $t=\frac{180}{60}$, potem je $t=3$.
+- To pomeni, da bo vozilo porabilo 3 ure za prevoz 180 km pri hitrosti 60 km/h.
+
+Ni dovolj samo zapisati $t=3$; treba je dodati tudi pomen tega rezultata.
+
+### 5. Presodi, ali model in odgovor ustrezata stvarni situaciji
+Na koncu preverimo, ali je rezultat smiseln. Včasih formula deluje matematično, a ne ustreza realnosti. Zato presodimo, ali je odgovor primeren, ali so pogoji veljavni in ali je model uporaben za to situacijo.
+
+Primer:
+
+- Če izračunaš, da je čas $t=-2$ ure, to ni smiselno, saj čas ni negativno število.
+- Tak rezultat pomeni, da je bil model napačen ali da je bil izbran napačen predpis.
+- Podobno je, če bi dobil $v=0$ v formuli $t=\frac{W}{v}$, to ni smiselno, ker delimo z 0.
 
 **Zgled:** Za stalno opravljeno delo velja $t=\frac{W}{v}$, kjer je $W$ obseg dela, $v$ hitrost dela in $t$ potreben čas. Če se hitrost poveča, se potreben čas zmanjša. Formula ima smisel za $v>0$.
 
