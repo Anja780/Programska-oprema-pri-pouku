@@ -6,11 +6,13 @@ Repozitorij vsebuje gradivo in izdelke za predmet Programska oprema pri pouku na
 
 ## Struktura in ključne datoteke
 
-- `README.md` – uvodni opis in kazalo povezav do izdelkov.
-- `Pregled-snovi-matematika-racionalne-funkcije.md` – dijakom namenjen povzetek definicij, postopkov, grafov, asimptot, enačb, neenačb in uporabe racionalnih funkcij.
-- `Preizkus-racionalne-funkcije.md` – 60-minutni preizkus, 6 nalog in 40 točk.
-- `Resitve-preizkusa-racionalne-funkcije.md` – rešitve in točkovnik; dokument izrecno opozarja, da preizkus še ni bil preverjen z dejanskim sošolcem oziroma sošolko.
-- `Učni načrt matematika.pdf` – uporabljeni vir za racionalne funkcije (poglavje »Racionalna funkcija«, str. 83). PDF je trenutno v korenu repozitorija kot nepripravljen Git dodatek.
+- `README.md` – uvodni opis in kazalo povezav do izvornih datotek.
+- `Pregled snovi/Pregled-snovi-matematika-racionalne-funkcije.tex` – izvorna datoteka s povzetkom definicij, postopkov, grafov, asimptot, enačb, neenačb in uporabe racionalnih funkcij.
+- `Preizkus/Preizkus-racionalne-funkcije.tex` – 60-minutni preizkus, 6 nalog in 40 točk.
+- `Rešitve/Resitve-preizkusa-racionalne-funkcije.tex` – rešitve in točkovnik; dokument izrecno opozarja, da preizkus še ni bil preverjen z dejanskim sošolcem oziroma sošolko.
+- `HANDOFF.md` – dokument z opisom projekta, strukture in pomembnih smernic.
+
+PDF izhodi so generirani lokalno z LaTeX orodjem in niso del repozitorija, ker repo vsebuje samo izvorno kodo.
 
 ## Pomembna vsebinska izhodišča
 
@@ -19,10 +21,10 @@ Pri racionalnih funkcijah je treba ohraniti izločene vrednosti tudi po krajšan
 ## Trenutno stanje in naslednji koraki
 
 - Pregled racionalnih funkcij je zamenjal prejšnji splošni pregled; kazalo v README-ju je posodobljeno.
-- Preizkus in rešitve so bili prej oddani v commitu `c7d5fce`; od takrat sta bila pregled in README dodatno spremenjena.
-- Delovna kopija ima neoddane spremembe. Pred commitom preveri `git status` in `git diff` ter potrdi preimenovanje/odstranitev stare datoteke `Pregled-snovi-matematika.md`.
+- Preizkus in rešitve so v izvorni LaTeX obliki, PDF izhodi pa se ustvarjajo lokalno ob gradnji dokumenta.
+- Repozitorij je namenjen samo izvorni kodi, zato so generirani artefakti (`.pdf`, `.log`, `.aux`, `.fdb_latexmk`, `.fls`, itd.) izključeni iz Git s `.gitignore`.
 - Dejanskega preizkusa na sošolcu še ni bilo. Za popolno izpolnitev te zahteve naj sošolec reši preizkus v 60 minutah, zabeleži nejasna navodila in porabo časa; nato ustrezno posodobi preizkus in zapis v rešitvah.
-- PDF dodaj v Git samo, če je vključitev izvornega gradiva v repozitorij namerna in dovoljena; sicer ga pusti zunaj commita.
+- Če želiš zagotoviti pregledno distribucijo, lahko dodajaš tudi lokalno generirane PDF datoteke, vendar ne v glavnem repozitoriju, ko je cilj samo izvorna koda.
 
 ## Preverjanje
 
