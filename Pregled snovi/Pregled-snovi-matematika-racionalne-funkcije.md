@@ -14,7 +14,7 @@ Definicijsko območje dobimo tako, da iz množice realnih števil izločimo vse 
 
 ### Ničle, poli in luknje
 
-- **Ničle:** rešimo $P(x)=0$, vendar preverimo, da ta vrednost ni izločena iz definicijskega območja.
+- **Ničle:** rešimo $P(x)=0$, vendar preverimo, da ta vrednost ni izločena iz definicijskega območja. (glej: **Luknja**)
 - **Poli:** ničle imenovalca, ki po krajšanju še vedno ostanejo v imenovalcu. V takih točkah je graf funkcije običajno razcepljen in se približuje navpični asimptoti. Večkratna ničla imenovalca določa stopnjo pola.
 - **Luknja:** če se isti faktor v števcu in imenovalcu pokrajša, ostane ta $x$ kljub temu izločen iz definicijskega območja. Ordinato luknje dobimo tako, da izločeno vrednost vstavimo v poenostavljeni predpis.
 
