@@ -6,5 +6,7 @@
 *.out
 *.synctex.gz
 *.md
+!README.md
+!HANDOFF.md
 .DS_Store
 *.png
