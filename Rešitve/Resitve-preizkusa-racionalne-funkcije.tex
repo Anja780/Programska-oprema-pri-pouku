@@ -11,12 +11,17 @@
 
 \begin{document}
 
-\setlist[itemize]{leftmargin=1.5em, itemsep=0.25em, topsep=0.3em}
+\setlist[itemize]{leftmargin=2.2em, itemsep=0.2em, topsep=0.3em}
 \renewcommand{\arraystretch}{1.2}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.25em}
 
 \section*{Rešitve in točkovnik: preizkus racionalnih funkcij}
 
+\vspace{0.25em}
+
 \subsection*{1. naloga}
+\vspace{0.2em}
 
 \[
  x^2-4=(x-2)(x+2),\qquad x^2-x-2=(x-2)(x+1).
@@ -32,15 +37,15 @@ Za dovoljene vrednosti lahko izraz krajšamo:
 Pri $x=2$ je bila prvotna funkcija izločena; poenostavljeni izraz bi tam imel vrednost $\frac{2+2}{2+1}=\frac{4}{3}$. Graf ima zato luknjo v točki $\left(2,\frac{4}{3}\right)$.
 
 \vspace{0.5em}
-\textbf{Točkovnik:}
+\textbf{Točkovnik (9 t):}
 \begin{itemize}[leftmargin=2.5em]
-  \item razcep števca in imenovalca: 1 t,
-  \item definicijsko območje: 2 t,
-  \item poenostavitev: 1 t,
-  \item luknja in koordinate: 1 t.
+  \item razcep števca in imenovalca: 3 t,
+  \item definicijsko območje: 3 t,
+  \item poenostavitev in luknja z koordinatama: 3 t.
 \end{itemize}
 
 \subsection*{2. naloga}
+\vspace{0.2em}
 
 Poiščemo presečišče grafov funkcij, zato rešimo enačbo
 \[
@@ -72,7 +77,7 @@ Točki presečišča sta torej
  \boxed{(3,4)}\quad \text{in}\quad \boxed{(-1,0)}.
 \]
 
-\textbf{Točkovnik:}
+\textbf{Točkovnik (8 t):}
 \vspace{0.35em}
 \begin{itemize}[leftmargin=2.5em]
   \item pogoja: 1 t,
@@ -82,51 +87,63 @@ Točki presečišča sta torej
   \item pravilno zapisani točki $(x,y)$: 1 t.
 \end{itemize}
 
-\textbf{Točkovnik:}
-\vspace{0.35em}
-\begin{itemize}[leftmargin=2.5em]
-  \item pogoj: 1 t,
-  \item pravilno odstranjevanje imenovalca: 1 t,
-  \item reševanje enačbe: 2 t,
-  \item izračun $y$-koordinate: 1 t,
-  \item pravilno zapisana točka $(x,y)$: 1 t.
-\end{itemize}
-
 \subsection*{3. naloga}
+\vspace{0.2em}
 
-Kritični vrednosti sta $x=-3$ (imenovalec je nič, zato je vrednost izločena) in $x=2$ (števec je nič). Predznaki:
+Najprej prestavimo vse na levo stran:
+\[
+ \frac{x^3-4x}{x^2-9}-2x\le 0.
+\]
+Po krajšanju dobimo
+\[
+ \frac{x^3-4x-2x(x^2-9)}{x^2-9}\le 0
+\quad\Longrightarrow\quad
+ \frac{-x(x^2-14)}{x^2-9}\le 0.
+\]
+To je enakovredno z
+\[
+ \frac{x(x^2-14)}{x^2-9}\ge 0.
+\]
+Kritične vrednosti so torej
+\[
+ x=-\sqrt{14},\,-3,\,0,\,3,\,\sqrt{14}.
+\]
+Predznaki po intervalih:
 
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
-Interval & $(-\infty,-3)$ & $(-3,2)$ & $(2,\infty)$ \\
+Interval & $(-\infty,-\sqrt{14})$ & $(-\sqrt{14},-3)$ & $(-3,0)$ & $(0,3)$ & $(3,\sqrt{14})$ & $(\sqrt{14},\infty)$ \\
 \hline
-$\frac{x-2}{x+3}$ & $+$ & $-$ & $+$ \\
+$\frac{x(x^2-14)}{x^2-9}$ & $-$ & $+$ & $-$ & $+$ & $-$ & $+$ \\
 \hline
 \end{tabular}
 
-Iščemo negativne vrednosti, zato je rešitev
+Iščemo nenegativne vrednosti, zato je rešitev
 \[
- \boxed{(-3,2)}.
+ \boxed{[-\sqrt{14},-3)\cup[0,3)\cup[\sqrt{14},\infty)}.
 \]
-Obe krajišči sta izključeni: pri $x=-3$ izraz ni definiran, pri $x=2$ pa je vrednost ulomka enaka 0, ne pa manjša od 0.
+Vrednosti $x=-3$ in $x=3$ so izključeni, ker imenovalec ni definiran; $x=0$ in $x=\pm\sqrt{14}$ pa so vključeni, ker je števec enak 0 in neenačba je neostra.
 
-\textbf{Točkovnik:}
+\textbf{Točkovnik (8 t):}
 \vspace{0.35em}
 \begin{itemize}[leftmargin=2.5em]
-  \item kritične vrednosti: 2 t,
+  \item prestavljanje na levo: 1 t,
+  \item poenostavitev in kritične vrednosti: 3 t,
   \item pravilni predznaki: 2 t,
-  \item izbira intervala: 1 t,
-  \item pravilen zapis z izključenima krajiščema: 1 t.
+  \item pravilna rešitev intervalskega zapisa: 2 t.
 \end{itemize}
 
+\newpage
+
 \subsection*{4. naloga}
+\vspace{0.2em}
 
 Najprej razcepimo števec:
 \[
  3x^2+x-2=(3x-2)(x+1).
 \]
 
-\textbf{a)} Imenovalec ne sme biti nič, zato je $D_h=\mathbb{R}\setminus\{1\}$. (1 t)
+\textbf{a)} Imenovalec ne sme biti nič, zato je $D_h=\mathbb{R}\setminus\{1\}$. (2 t)
 
 \textbf{b)} Ničli sta $x=\frac{2}{3}$ in $x=-1$, torej točki $\left(\frac{2}{3},0\right)$ in $(-1,0)$. Za presečišče z osjo $y$ vstavimo $x=0$: $h(0)=2$, torej $(0,2)$. (3 t)
 
@@ -136,9 +153,21 @@ Najprej razcepimo števec:
 \]
 zato je poševna asimptota $y=3x+4$. (3 t)
 
-\textbf{d)} Skica naj prikaže dve veji, navpično asimptoto $x=1$, poševno asimptoto $y=3x+4$ ter presečišči z osema. (1 t)
+\textbf{d)} Skica naj prikaže dve veji, navpično asimptoto $x=1$, poševno asimptoto $y=3x+4$ ter presečišči z osema. (2 t)
+
+\textbf{Točkovnik (9 t):}
+\vspace{0.35em}
+\begin{itemize}[leftmargin=2.5em]
+  \item definicijsko območje: 2 t,
+  \item ničle: 3 t,
+  \item presečišče z osjo $y$: 1 t,
+  \item navpična asimptota: 1 t,
+  \item poševna asimptota: 1 t,
+  \item skica in označene točke/asimptote: 1 t.
+\end{itemize}
 
 \subsection*{5. naloga}
+\vspace{0.2em}
 
 Pogoja sta $x\ne 2$ in $x\ne -2$. Pomnožimo enačbo z $(x-2)(x+2)$:
 \[
@@ -158,17 +187,18 @@ Nobena vrednost ni $2$ ali $-2$, zato sta obe rešitvi dovoljeni:
  \boxed{x=1-\sqrt{5}\quad\text{ali}\quad x=1+\sqrt{5}}.
 \]
 
-\textbf{Točkovnik:}
+\textbf{Točkovnik (8 t):}
 \vspace{0.35em}
 \begin{itemize}[leftmargin=2.5em]
   \item pogoja: 1 t,
   \item pravilno odpravljanje ulomkov: 2 t,
   \item kvadratna enačba: 2 t,
-  \item rešitvi: 1 t,
+  \item rešitvi: 2 t,
   \item preverjanje pogojev in končni odgovor: 1 t.
 \end{itemize}
 
 \subsection*{6. naloga}
+\vspace{0.2em}
 
 Naj bo $x>0$ čas v urah, v katerem stroj B sam izdela naročilo. Stroj A v eni uri opravi $\frac{1}{6}$ naročila, stroja skupaj pa $\frac{1}{4}$ naročila. Zato velja
 \[
@@ -180,7 +210,7 @@ Odštejemo $\frac{1}{6}$:
 \]
 zato je $x=12$. Stroj B bi naročilo sam izdelal v \textbf{12 urah}.
 
-\textbf{Točkovnik:}
+\textbf{Točkovnik (8 t):}
 \vspace{0.35em}
 \begin{itemize}[leftmargin=2.5em]
   \item pomen neznanke in enota: 1 t,
