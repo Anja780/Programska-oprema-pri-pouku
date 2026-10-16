@@ -14,20 +14,20 @@
 \newtcolorbox{primerbox}[1][]{%
   enhanced,
   breakable,
-  colback=red!7,
-  colframe=red!70!black,
+  colback=blue!7,
+  colframe=blue!70!black,
   boxrule=0pt,
   arc=0pt,
   left=8pt,
   right=8pt,
   top=6pt,
   bottom=6pt,
-  colbacktitle=red!70!black,
+  colbacktitle=blue!70!black,
   coltitle=white,
   fonttitle=\bfseries\large,
   title=PRIMER,
   attach boxed title to top left={xshift=0mm,yshift=-\tcboxedtitleheight/2},
-  boxed title style={boxrule=0pt, arc=0pt, colback=red!70!black},
+  boxed title style={boxrule=0pt, arc=0pt, colback=blue!70!black},
   #1
 }
 
@@ -45,7 +45,7 @@
   colbacktitle=blue!70!black,
   coltitle=white,
   fonttitle=\bfseries\large,
-  title=ZGLED,
+  title=PRIMER,
   attach boxed title to top left={xshift=0mm,yshift=-\tcboxedtitleheight/2},
   boxed title style={boxrule=0pt, arc=0pt, colback=blue!70!black},
   #1
@@ -135,57 +135,43 @@ Asimptoti sta $x=2$ in $y=2$, ničla je $x=-\frac{1}{2}$, presečišče grafa z 
 
 \section{Kako analiziramo in skiciramo graf?}
 
-Za pregledno skico grafa racionalne funkcije sledimo tem korakom:
+Poglejmo si primer funkcije $f(x)=\frac{2x+1}{x-2}$. Poskusimo ga analizirati in skicirati njegov graf. Za pregledno skico grafa racionalne funkcije sledimo tem korakom:
 
 \begin{enumerate}[leftmargin=*]
-  \item Razstavi števec in imenovalec na faktorje.
-  \item Določi definicijsko območje in morebitne izločene vrednosti.
-  \item Poenostavi ulomek; označi ničle, pole in luknje.
-  \item Določi presečišča grafa z osema: ničle dobimo iz $f(x)=0$, presečišče z osjo $y$ pa izračunamo z $f(0)$, če je $0\in D_f$.
-  \item Določi vodoravno ali poševno asimptoto s primerjavo stopenj oziroma z deljenjem polinomov.
-  \item Nariši asimptote črtkano, označi značilne točke in skiciraj veje grafa. Po potrebi preveri vrednosti funkcije na vsaki strani pola ali uporabi grafični program.
-\end{enumerate}
+  \item \textbf{Razstavi števec in imenovalec na faktorje.}
+    \begin{primerbox}
+      Za $f(x)=\frac{2x+1}{x-2}$ ne moremo več razstaviti števca, saj je $2x+1$ že linearni polinom, imenovalec pa je $x-2$. To je že najpreprostejša razcepna oblika.
+    \end{primerbox}
 
-\begin{zgledbox}
-Naj bo
-\[
-  f(x)=\frac{2x+1}{x-2}.
-\]
-Najprej določimo, kje funkcija ni definirana: imenovalec je $x-2$, zato je $x\ne 2$.
+  \item \textbf{Določi definicijsko območje in morebitne izločene vrednosti.}
+    \begin{primerbox}
+      Za $f(x)=\frac{2x+1}{x-2}$ mora veljati $x-2\ne 0$, zato je $D_f=\mathbb{R}\setminus\{2\}$.
+    \end{primerbox}
 
-\begin{itemize}[leftmargin=*]
-  \item \textbf{Navpična asimptota:} nastane, ko imenovalec postane $0$, zato je
-    \[
-      x-2=0\quad\Rightarrow\quad x=2.
-    \]
-    To je navpična asimptota.
+  \item \textbf{Poenostavi ulomek; označi ničle, pole in luknje.}
+    \begin{primerbox}
+      Pri $f(x)=\frac{2x+1}{x-2}$ ni skupnih faktorjev, zato ulomek ni možno krajšati. Ničla je rešitev $2x+1=0$, torej $x=-\frac{1}{2}$, in $x=2$ je pol, ker imenovalec postane nič.
+    \end{primerbox}
 
-  \item \textbf{Vodoravna asimptota:} primerjamo stopnji števca in imenovalca. Oba sta stopnje $1$, zato je vodoravna asimptota enaka količniku vodilnih koeficientov:
-    \[
+  \item \textbf{Določi presečišča grafa z osema.}
+    \begin{primerbox}
+      Ničlo dobimo iz $2x+1=0$, torej $x=-\frac{1}{2}$, kar pomeni točko $\left(-\frac{1}{2},0\right)$. Presečišče z osjo $y$ dobimo z $f(0)=\frac{1}{-2}=-\frac{1}{2}$, torej $\left(0,-\frac{1}{2}\right)$.
+    \end{primerbox}
+
+  \item \textbf{Določi vodoravno ali poševno asimptoto s primerjavo stopenj oziroma z deljenjem polinomov.}
+    \begin{primerbox}
+      Stopnja števca in imenovalca sta enaki, zato je vodoravna asimptota
+      \[
       y=\frac{2}{1}=2.
-    \]
-    Torej je $y=2$ vodoravna asimptota.
+      \]
+      Prav tako je $x=2$ navpična asimptota, ker imenovalec v tej točki postane nič.
+    \end{primerbox}
 
-  \item \textbf{Ničla:} rešimo števec $2x+1=0$:
-    \[
-      2x+1=0\quad\Rightarrow\quad 2x=-1\quad\Rightarrow\quad x=-\frac{1}{2}.
-    \]
-    Pri $x=-\frac{1}{2}$ je $y=0$, torej je ničla točka
-    \[
-      \left(-\frac{1}{2},0\right).
-    \]
-
-  \item \textbf{Presečišče z osjo $y$:} izračunamo $f(0)$, če je $0$ v definicijskem območju:
-    \[
-      f(0)=\frac{2\cdot 0+1}{0-2}=\frac{1}{-2}=-\frac{1}{2}.
-    \]
-    Torej je presečišče z osjo $y$ točka
-    \[
-      \left(0,-\frac{1}{2}\right).
-    \]
-\end{itemize}
-Zdaj vemo: graf ima navpično asimptoto $x=2$, vodoravno asimptoto $y=2$, ničlo v $\left(-\frac{1}{2},0\right)$ in presečišče z osjo $y$ v $\left(0,-\frac{1}{2}\right)$. Nato lahko izračunamo še nekaj vrednosti, na primer $f(1)$ in $f(3)$, da določimo potek vej na intervalih $(-\infty,2)$ in $(2,\infty)$.
-\end{zgledbox}
+  \item \textbf{Nariši asimptote črtkano, označi značilne točke in skiciraj veje grafa.}
+    \begin{primerbox}
+      Za $f(x)=\frac{2x+1}{x-2}$ narišemo črtkano premici $x=2$ in $y=2$, označimo točki $\left(-\frac{1}{2},0\right)$ in $\left(0,-\frac{1}{2}\right)$ ter skiciramo veje grafa na intervalih $(-\infty,2)$ in $(2,\infty)$.
+    \end{primerbox}
+\end{enumerate}
 
 \begin{center}
 \begin{tikzpicture}[scale=0.7]
@@ -404,10 +390,6 @@ Na koncu preverimo, ali je rezultat smiseln. Včasih formula deluje matematično
 Če izračunaš, da je čas $t=-2$ ure, to ni smiselno, saj čas ni negativno število. Tak rezultat pomeni, da je bil model napačen ali da je bil izbran napačen predpis. Podobno je, če bi dobil $v=0$ v formuli $t=\frac{W}{v}$, to ni smiselno, ker delimo z 0.
 \end{primerbox}
 
-\begin{zgledbox}
-Za stalno opravljeno delo velja $t=\frac{W}{v}$, kjer je $W$ obseg dela, $v$ hitrost dela in $t$ potreben čas. Če se hitrost poveča, se potreben čas zmanjša. Formula ima smisel za $v>0$.
-\end{zgledbox}
-
 \begin{napakabox}
 Na hitro: ko si negotov, se vrni k enemu od teh primerov.
 
@@ -426,7 +408,7 @@ Na hitro: ko si negotov, se vrni k enemu od teh primerov.
     \]
     je $x=2$ luknja, ne ničla. Faktor $(x-2)$ se pokrajša, a vrednost $x=2$ še vedno ni v definicijskem območju.
 
-  \item \textbf{Vključiti pol v neenačbo.} \\
+  \item \textbf{Vključiti pol v rešitev.} \\
     Pri
     \[
       \frac{x+1}{x-3}\ge 0
