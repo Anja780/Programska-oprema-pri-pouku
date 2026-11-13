@@ -10,3 +10,7 @@
 !HANDOFF.md
 .DS_Store
 *.png
+settings.json
+.venv
+media
+__pycache__
