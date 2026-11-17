@@ -1,5 +1,6 @@
 from manim import *
 import numpy as np
+from pathlib import Path
 
 
 # Pokončni format za TikTok/Instagram.
@@ -24,7 +25,11 @@ config.background_color = BG
 
 class VsotaKotov(Scene):
     def txt(self, text, size=30, color=UL_DARK, **kwargs):
-        return Text(text, font="Arial", font_size=size, color=color, **kwargs)
+        text_mobject = Text(text, font="Arial", font_size=size, color=color, **kwargs)
+        max_width = config.frame_width - 0.8
+        if text_mobject.width > max_width:
+            text_mobject.scale_to_fit_width(max_width)
+        return text_mobject
 
     def heading(self, text, y=6.55):
         return self.txt(text, size=36, color=UL_RED, weight=BOLD).scale_to_fit_width(8.2).move_to(UP * y)
@@ -83,19 +88,24 @@ class VsotaKotov(Scene):
         A1 = np.array([-2.8, -1.5, 0])
         B1 = np.array([0.3, 2.5, 0])
         C1 = np.array([2.7, -1.3, 0])
-        trikotnik_1 = Polygon(A1, B1, C1, color=UL_DARK, stroke_width=7)
+        stranica_AB = Line(A1, B1, color=UL_DARK, stroke_width=7)
+        stranica_BC = Line(B1, C1, color=UL_DARK, stroke_width=7)
+        stranica_CA = Line(C1, A1, color=UL_DARK, stroke_width=7)
+        trikotnik_1 = VGroup(stranica_AB, stranica_BC, stranica_CA)
 
         # Trikotnik se nadaljuje v krajše, bolj vidne črtkane vodilne črte, kot na referenci.
         dolzina_raztega = 0.8
-        beta_extension_from_B = self.dashed_segment(B1, B1 + normalize(B1 - C1) * 1.6, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        gamma_extension_from_C = self.dashed_segment(C1, C1 + normalize(C1 - B1) * 2.6, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        gamma_right_extension = self.dashed_segment(C1, C1 + normalize(C1 - A1) * 1.8, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        left_base = self.dashed_segment(A1 - (B1 - A1) * dolzina_raztega, A1, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        right_base = self.dashed_segment(B1, B1 + (B1 - A1) * dolzina_raztega, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        left_side = self.dashed_segment(A1, A1 - (C1 - A1) * dolzina_raztega, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        right_side = self.dashed_segment(B1, B1 + (C1 - B1) * dolzina_raztega, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        alpha_right_extension = self.dashed_segment(A1, A1 + normalize(C1 - A1) * 1.9, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
-        dashed_guides_1 = VGroup(left_base, right_base, left_side, right_side, alpha_right_extension, beta_extension_from_B, gamma_extension_from_C, gamma_right_extension)
+        odmik_od_oglisc = 0.16
+        smer_AB = normalize(B1 - A1)
+        smer_BC = normalize(C1 - B1)
+        smer_CA = normalize(A1 - C1)
+        beta_extension_from_B = self.dashed_segment(B1 - smer_BC * (odmik_od_oglisc + dolzina_raztega), B1 - smer_BC * odmik_od_oglisc, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        gamma_extension_from_C = self.dashed_segment(C1 + smer_BC * odmik_od_oglisc, C1 + smer_BC * (odmik_od_oglisc + dolzina_raztega), color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        gamma_right_extension = self.dashed_segment(C1 - smer_CA * (odmik_od_oglisc + dolzina_raztega), C1 - smer_CA * odmik_od_oglisc, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        left_base = self.dashed_segment(A1 - smer_AB * (odmik_od_oglisc + dolzina_raztega), A1 - smer_AB * odmik_od_oglisc, color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        right_base = self.dashed_segment(B1 + smer_AB * odmik_od_oglisc, B1 + smer_AB * (odmik_od_oglisc + dolzina_raztega), color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        left_side = self.dashed_segment(A1 + smer_CA * odmik_od_oglisc, A1 + smer_CA * (odmik_od_oglisc + dolzina_raztega), color=UL_DARK, stroke_width=4.0, dash_length=0.18, gap_length=0.12)
+        dashed_guides_1 = VGroup(left_base, right_base, left_side, gamma_right_extension, beta_extension_from_B, gamma_extension_from_C)
 
         # Oznake ležijo na notranjih simetralah kotov, blizu posameznih oglišč.
         simetrala_A1 = normalize(normalize(B1 - A1) + normalize(C1 - A1))
@@ -105,7 +115,7 @@ class VsotaKotov(Scene):
         beta_1 = MathTex(r"\beta", color=UL_DARK).scale(1.2).move_to(B1 + simetrala_B1 * 0.72)
         gamma_1 = MathTex(r"\gamma", color=UL_BLUE).scale(1.2).move_to(C1 + simetrala_C1 * 0.72)
         uvod_1 = self.txt("Oglejmo si poljuben trikotnik.", size=28, color=UL_DARK).move_to(UP * 4.8)
-        uvod_2 = self.txt("V njem so tri notranji koti: α, β, γ.", size=26, color=UL_DARK).move_to(UP * 3.9)
+        uvod_2 = self.txt("V trikotniku so trije notranji koti: α, β in γ.", size=26, color=UL_DARK).move_to(UP * 3.9)
 
         ang_A1_to_B = np.arctan2(B1[1] - A1[1], B1[0] - A1[0])
         ang_A1_to_C = np.arctan2(C1[1] - A1[1], C1[0] - A1[0])
@@ -163,8 +173,18 @@ class VsotaKotov(Scene):
             stroke_width=0,
         ).move_arc_center_to(C1)
 
-        self.play(FadeIn(naslov), Create(trikotnik_1), Create(dashed_guides_1), FadeIn(alpha_1_lok, beta_1_lok, gamma_1_lok, alpha_1_odsek, beta_1_odsek, gamma_1_odsek, alpha_1, beta_1, gamma_1), FadeIn(uvod_1, uvod_2), run_time=2.2)
-        self.wait(1.7)
+        self.play(FadeIn(naslov, uvod_1, uvod_2), run_time=0.8)
+        self.play(Create(left_base), run_time=0.35)
+        self.play(Create(stranica_AB), run_time=0.55)
+        self.play(Create(right_base), run_time=0.35)
+        self.play(Create(beta_extension_from_B), run_time=0.35)
+        self.play(Create(stranica_BC), run_time=0.55)
+        self.play(Create(gamma_extension_from_C), run_time=0.35)
+        self.play(Create(gamma_right_extension), run_time=0.35)
+        self.play(Create(stranica_CA), run_time=0.55)
+        self.play(Create(left_side), run_time=0.35)
+        self.play(FadeIn(alpha_1_lok, beta_1_lok, gamma_1_lok, alpha_1_odsek, beta_1_odsek, gamma_1_odsek, alpha_1, beta_1, gamma_1), run_time=0.8)
+        self.wait(1.5)
         self.play(FadeOut(naslov, trikotnik_1, dashed_guides_1, alpha_1_lok, beta_1_lok, gamma_1_lok, alpha_1_odsek, beta_1_odsek, gamma_1_odsek, alpha_1, beta_1, gamma_1, uvod_1, uvod_2), run_time=1.6)
         self.wait(0.4)
 
@@ -286,14 +306,36 @@ class VsotaKotov(Scene):
             color=UL_BLUE,
             stroke_width=1.5,
         ).set_opacity(0)
-        konstrukcija_1 = self.txt("Narišimo dve vzporedni premici p in p′.", size=24, color=UL_DARK).move_to(UP * 4.3)
-        konstrukcija_2 = self.txt("Sekajmo ju z dvema premicama r in q.", size=24, color=UL_DARK).move_to(UP * 3.5)
-        self.play(Create(p), Create(pp), Create(r), Create(q), FadeIn(oznaka_p, oznaka_pp, oznaka_r, oznaka_q), FadeIn(konstrukcija_1, konstrukcija_2), run_time=2.2)
-        self.play(FadeIn(alpha_dol, beta_dol, gamma_dol, alpha_lok, beta_lok, gamma_lok), run_time=1.6)
+
+        skica = VGroup(
+            p, pp, r, q,
+            oznaka_p, oznaka_pp, oznaka_r, oznaka_q,
+            alpha_dol, beta_dol, gamma_dol,
+            alpha_lok, beta_lok, gamma_lok,
+            alpha_odsek, beta_odsek, gamma_odsek,
+            alpha_vrh, gamma_vrh, alpha_vrh_lok, gamma_vrh_lok,
+        )
+        skica_center = skica.get_center()
+        skica_scale = 0.82
+        skica_position = ORIGIN + DOWN * 0.2
+        skica.scale(skica_scale).move_to(skica_position)
+
+        # Animacije kotov morajo uporabljati koordinate po enakem skaliranju
+        # in premiku kot skica; A2, B2 in C2 so še vedno v prvotnem koordinatnem sistemu.
+        def skica_point(point):
+            return skica_position + skica_scale * (point - skica_center)
+
+        A2_prikaz = skica_point(A2)
+        B2_prikaz = skica_point(B2)
+        C2_prikaz = skica_point(C2)
+
+        konstrukcija_1 = self.txt("Narišimo dve vzporedni premici p in p′.", size=24, color=UL_DARK).move_to(UP * 4.8)
+        konstrukcija_2 = self.txt("Sekajmo ju z dvema premicama r in q.", size=24, color=UL_DARK).move_to(UP * 4.1)
+        self.play(Create(p), Create(pp), Create(r), Create(q), FadeIn(oznaka_p, oznaka_pp, oznaka_r, oznaka_q), FadeIn(konstrukcija_1, konstrukcija_2), run_time=1.9)
+        self.play(FadeIn(alpha_dol, beta_dol, gamma_dol, alpha_lok, beta_lok, gamma_lok), run_time=1.3)
         self.wait(1.0)
         self.play(FadeIn(alpha_odsek, beta_odsek, gamma_odsek), run_time=1.0)
         self.play(FadeOut(konstrukcija_1, konstrukcija_2), run_time=0.8)
-        self.wait(1.6)
 
         # 3. Frame: fokus na premici p, p′ in r; primerjamo kot α z novokonstruiranim α.
         self.play(
@@ -306,27 +348,27 @@ class VsotaKotov(Scene):
             oznaka_p.animate.set_opacity(0.6),
             oznaka_pp.animate.set_opacity(0.6),
             oznaka_r.animate.set_opacity(1.0),
-            run_time=1.2,
+            run_time=0.8,
         )
 
         razlaga_alpha_1 = self.txt(
             "Ker sta p in p′ vzporedni, sta izmenična kota enaka.", size=24
-        ).move_to(UP * 4.3)
+        ).move_to(UP * 4.75)
         razlaga_alpha_2 = self.txt(
-            "Torej je kot na levi enak kotu na desni.", size=24
-        ).move_to(DOWN * 3.2)
+            "Torej je zgornji kot enak spodnjemu.", size=24
+        ).move_to(UP * 3.75)
         self.play(Indicate(alpha_vrh, color=UL_RED), FadeIn(alpha_vrh), FadeIn(razlaga_alpha_1, razlaga_alpha_2), run_time=1.5)
         self.wait(1.8)
         self.play(
-            Rotate(alpha_odsek, angle=zasuk_alpha, about_point=A2),
+            Rotate(alpha_odsek, angle=zasuk_alpha, about_point=A2_prikaz),
             run_time=1.2,
         )
         self.play(
-            alpha_odsek.animate.shift(B2 - A2),
+            alpha_odsek.animate.shift(B2_prikaz - A2_prikaz),
             FadeIn(alpha_vrh_lok),
             run_time=1.2,
         )
-        self.wait(2.7)
+        self.wait(2.2)
 
         # 4. Frame: fokus na premici p, p′ in q; primerjamo kot γ z novokonstruiranim γ.
         self.play(
@@ -348,15 +390,15 @@ class VsotaKotov(Scene):
         self.wait(0.6)
         razlaga_gamma_1 = self.txt(
             "Enako velja tudi za drugi par kotov.", size=24
-        ).move_to(UP * 4.3)
+        ).move_to(UP * 4.75)
         self.play(FadeOut(razlaga_alpha_1, razlaga_alpha_2), run_time=0.7)
         self.play(Indicate(gamma_dol, color=UL_BLUE), FadeIn(gamma_vrh), FadeIn(razlaga_gamma_1), run_time=1.5)
         self.play(
-            Rotate(gamma_odsek, angle=zasuk_gamma, about_point=C2),
+            Rotate(gamma_odsek, angle=zasuk_gamma, about_point=C2_prikaz),
             run_time=1.2,
         )
         self.play(
-            gamma_odsek.animate.shift(B2 - C2),
+            gamma_odsek.animate.shift(B2_prikaz - C2_prikaz),
             FadeIn(gamma_vrh_lok),
             run_time=1.2,
         )
@@ -380,13 +422,12 @@ class VsotaKotov(Scene):
             run_time=1.4,
         )
         self.play(FadeOut(razlaga_gamma_1), run_time=0.7)
-        self.wait(2.8)
 
-        sklep_1 = self.txt("Če se koti zložijo skupaj, dobimo ravni kot.", size=24, color=UL_DARK).move_to(UP * 4.3)
+        sklep_1 = self.txt("Če se koti zložijo skupaj, dobimo ravni kot.", size=24, color=UL_DARK).move_to(UP * 5.0)
         formula_trikotnik = MathTex(
             r"\alpha+\beta+\gamma=180^\circ", color=UL_RED
-        ).scale(1.05).move_to(DOWN * 4.7)
-        sklep_2 = self.txt("Vsota notranjih kotov v trikotniku je 180°.", size=28, color=UL_DARK).move_to(DOWN * 5.8)
+        ).scale(1.05).move_to(DOWN * 3.9)
+        sklep_2 = self.txt("Vsota notranjih kotov v trikotniku je 180°.", size=28, color=UL_DARK).move_to(DOWN * 5.1)
         self.play(
             alpha_lok.animate.set_opacity(1.0),
             beta_lok.animate.set_opacity(1.0),
@@ -396,8 +437,7 @@ class VsotaKotov(Scene):
             FadeIn(sklep_2),
             run_time=3.0,
         )
-
-
+        self.wait(1.7)
 
         final_proof_group = VGroup(
             alpha_dol, beta_dol, gamma_dol,
@@ -413,27 +453,14 @@ class VsotaKotov(Scene):
 
         # 7. Prehod: isto idejo uporabimo pri večkotniku.
         prehod = self.heading("KAJ PA VEČKOTNIK?")
+        naslov_pet = self.heading("PETKOTNIK RAZDELIMO NA TRIKOTNIKE")
         podvprasanje = self.txt(
-            "Ali lahko tudi njegove kote\nrazdelimo na trikotnike?",
-            size=36,
+            "Konveksni večkotnik lahko\nrazdelimo na trikotnike.\nPoglejmo si petkotnik.",
+            size=28,
             line_spacing=0.9,
             weight=BOLD,
             color=UL_DARK,
-        ).move_to(UP * 2.35)
-
-        self.play(
-            FadeIn(prehod, scale=1.02),
-            FadeIn(podvprasanje, scale=1.03),
-            run_time=1.1,
-        )
-        self.wait(0.8)
-        self.play(
-            FadeOut(prehod, podvprasanje),
-            run_time=0.9,
-        )
-
-        # 8. Petkotnik razdelimo na tri trikotnike.
-        naslov_pet = self.heading("PETKOTNIK RAZDELIMO NA TRIKOTNIKE")
+        ).move_to(UP * 3.65)
         petkotnik = RegularPolygon(
             n=5, radius=1.9, color=UL_DARK, stroke_width=6
         ).rotate(PI / 2).move_to(UP * 0.9)
@@ -447,37 +474,131 @@ class VsotaKotov(Scene):
         for i, indeksi in enumerate(trikotniki, start=1):
             sredina = np.mean([oglisca[j] for j in indeksi], axis=0)
             stevilke.add(self.txt(str(i), size=32, color=UL_RED, weight=BOLD).move_to(sredina))
+        barve_trikotnikov = [UL_RED, UL_BLUE, UL_LIGHT]
+        ploskve_trikotnikov = VGroup(*[
+            Polygon(
+                *[oglisca[j] for j in indeksi],
+                color=UL_DARK,
+                stroke_width=0,
+                fill_color=barve_trikotnikov[i],
+                fill_opacity=0.18,
+            )
+            for i, indeksi in enumerate(trikotniki)
+        ])
+        kosi = VGroup(*[
+            VGroup(ploskve_trikotnikov[i], stevilke[i])
+            for i in range(len(trikotniki))
+        ])
         opis_pet = self.txt("Diagonali ustvarita 3 trikotnike.", size=26).move_to(DOWN * 2.0)
         utemeljitev_pet = self.txt("Vsak prispeva 180°.", size=24, color=UL_GRAY).move_to(DOWN * 2.65)
 
-        self.play(FadeIn(naslov_pet), Create(petkotnik), run_time=1.0)
-        self.play(Create(diagonali), FadeIn(stevilke), run_time=1.0)
+        self.play(
+            FadeIn(prehod),
+            FadeIn(podvprasanje),
+            Create(petkotnik),
+            run_time=1.5,
+        )
+        self.wait(0.35)
+        self.play(
+            FadeIn(kosi),
+            Create(diagonali),
+            run_time=1.1,
+        )
+        self.play(
+            ReplacementTransform(prehod, naslov_pet),
+            FadeOut(podvprasanje),
+            run_time=0.8,
+        )
         self.play(FadeIn(opis_pet, utemeljitev_pet), run_time=0.4)
-        self.wait(1.7)
+        self.wait(2.4)
+
+        # Trikotnike ločimo iz petkotnika in jih pokažemo kot tri samostojne kose.
+        for ploskev in ploskve_trikotnikov:
+            ploskev.set_stroke(UL_DARK, width=5, opacity=1)
+        smer_desno = normalize(np.array([
+            -(oglisca[2] - oglisca[0])[1],
+            (oglisca[2] - oglisca[0])[0],
+            0,
+        ]))
+        sredina_desnega = np.mean([oglisca[j] for j in trikotniki[0]], axis=0)
+        if np.dot(smer_desno, sredina_desnega - oglisca[0]) < 0:
+            smer_desno *= -1
+
+        smer_levo = normalize(np.array([
+            -(oglisca[3] - oglisca[0])[1],
+            (oglisca[3] - oglisca[0])[0],
+            0,
+        ]))
+        sredina_levga = np.mean([oglisca[j] for j in trikotniki[2]], axis=0)
+        if np.dot(smer_levo, sredina_levga - oglisca[0]) < 0:
+            smer_levo *= -1
+
+        odmik_kosov = 0.38
+        self.play(
+            kosi[0].animate.shift(smer_desno * odmik_kosov),
+            kosi[2].animate.shift(smer_levo * odmik_kosov),
+            FadeOut(petkotnik, diagonali, opis_pet, utemeljitev_pet),
+            run_time=1.5,
+        )
+        self.wait(0.8)
 
         # 9. Konkretni izračun za petkotnik.
         racun_pet = MathTex(r"3\cdot180^\circ=540^\circ", color=UL_RED).scale(1.2)
-        racun_pet.move_to(DOWN * 3.75)
+        racun_pet.move_to(DOWN * 4.2)
         self.play(Write(racun_pet), run_time=0.8)
-        self.wait(1.4)
+        self.wait(0.8)
 
         # 10. Število trikotnikov sledi vzorcu n - 2.
-        pregled = VGroup(
-            self.txt("3 stranice  →  1 trikotnik", size=27),
-            self.txt("4 stranice  →  2 trikotnika", size=27),
-            self.txt("5 stranic      →  3 trikotniki", size=27),
-            self.txt("6 stranic      →  4 trikotniki", size=27),
-        ).arrange(DOWN, buff=0.48).move_to(UP * 1.35)
-        posplositev = MathTex(r"n\text{-kotnik}\;\longrightarrow\;n-2\text{ trikotnikov}", color=UL_BLUE).scale(0.8)
-        posplositev.move_to(DOWN * 2.0)
-        self.play(FadeOut(VGroup(naslov_pet, petkotnik, diagonali, stevilke, opis_pet,
-                                 utemeljitev_pet, racun_pet)), run_time=0.8)
+        vrstice_y = [2.5, 1.7, 0.9, 0.1]
+        leva_sidra = []
+        desna_sidra = []
+        pregled_vrstice = []
+        stevila_stranic = ["3", "4", "5", "6"]
+        poimenovanja_stranic = ["stranice", "stranice", "stranic", "stranic"]
+        stevila_trikotnikov = ["1", "2", "3", "4"]
+        poimenovanja_trikotnikov = ["trikotnik", "trikotnika", "trikotniki", "trikotniki"]
+
+        def postavi_desno(obj, x, y):
+            obj.move_to([x - obj.width / 2, y, 0])
+
+        def postavi_levo(obj, x, y):
+            obj.move_to([x + obj.width / 2, y, 0])
+
+        for i, y in enumerate(vrstice_y):
+            st_stranic = self.txt(stevila_stranic[i], size=29)
+            beseda_stranic = self.txt(poimenovanja_stranic[i], size=29)
+            puscica = MathTex(r"\longrightarrow", color=UL_BLUE).scale(0.78)
+            st_trikotnikov = self.txt(stevila_trikotnikov[i], size=29)
+            beseda_trikotnikov = self.txt(poimenovanja_trikotnikov[i], size=29)
+            postavi_desno(st_stranic, -2.35, y)
+            postavi_levo(beseda_stranic, -2.18, y)
+            puscica.move_to([0.0, y, 0])
+            postavi_desno(st_trikotnikov, 1.35, y)
+            postavi_levo(beseda_trikotnikov, 1.53, y)
+            leva_sidra.append(st_stranic)
+            desna_sidra.append(st_trikotnikov)
+            pregled_vrstice.append(
+                VGroup(st_stranic, beseda_stranic, puscica, st_trikotnikov, beseda_trikotnikov)
+            )
+        pregled = VGroup(*pregled_vrstice)
+        domena_n = MathTex(r"n\in\mathbb{N},\quad n\ge3", color=UL_GRAY).scale(0.76).move_to(DOWN * 1.15)
+        self.play(FadeOut(VGroup(naslov_pet, kosi, racun_pet)), run_time=0.8)
         naslov_vzorec = self.heading("OPAZIMO VZOREC")
-        self.play(FadeIn(naslov_vzorec), FadeIn(pregled), Write(posplositev), run_time=1.0)
-        self.wait(1.5)
+        self.play(FadeIn(naslov_vzorec), FadeIn(pregled), run_time=1.0)
+        n_nadomestek = self.txt("n", size=29, color=UL_RED)
+        n_nadomestek.move_to([-2.35 - n_nadomestek.width / 2, vrstice_y[3], 0])
+        n_minus_2_nadomestek = self.txt("n − 2", size=29, color=UL_RED)
+        n_minus_2_nadomestek.move_to([1.35 - n_minus_2_nadomestek.width / 2, vrstice_y[3], 0])
+        self.play(
+            Transform(leva_sidra[3], n_nadomestek),
+            Transform(desna_sidra[3], n_minus_2_nadomestek),
+            run_time=0.9,
+        )
+        self.play(FadeIn(domena_n), run_time=0.4)
+        self.wait(2.7)
 
         # 11. Posplošitev in končno pravilo.
-        self.play(FadeOut(VGroup(naslov_vzorec, pregled, posplositev)), run_time=0.8)
+        self.play(FadeOut(VGroup(naslov_vzorec, pregled, domena_n)), run_time=0.8)
         naslov_pravilo = self.heading("SPLOŠNO PRAVILO")
         formula_splosno = MathTex(r"S=(n-2)\cdot180^\circ", color=UL_RED).scale(1.35)
         formula_splosno.move_to(UP * 1.25)
@@ -486,7 +607,14 @@ class VsotaKotov(Scene):
         zakljucek = self.txt("n − 2 je število trikotnikov.", size=25, color=UL_BLUE).move_to(DOWN * 2.55)
         self.play(FadeIn(naslov_pravilo), Write(formula_splosno), run_time=1.0)
         self.play(FadeIn(pomen_S, pomen_n, zakljucek), run_time=0.6)
-        self.wait(0.6)
+        self.wait(0.9)
+
+        # Samostojen zaključni kader z uradnim logotipom UL FMF.
+        self.play(FadeOut(VGroup(naslov_pravilo, formula_splosno, pomen_S, pomen_n, zakljucek)), run_time=0.4)
+        logo_path = Path(__file__).parent / "media" / "images" / "UL_FMF_logoHOR-RGB_barv.png"
+        logo_fmf = ImageMobject(str(logo_path)).scale_to_fit_width(7.2).move_to(ORIGIN)
+        self.play(FadeIn(logo_fmf), run_time=0.4)
+        self.wait(1.4666667)
 
 
 # Allows VS Code's "Run Python File" button to render a preview.
