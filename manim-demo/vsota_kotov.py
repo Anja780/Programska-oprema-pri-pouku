@@ -1,4 +1,5 @@
 from manim import *
+from manimpango import register_font
 import numpy as np
 from pathlib import Path
 
@@ -10,11 +11,14 @@ config.frame_width = 9
 config.frame_height = 16
 config.frame_rate = 30
 
-# Barvna zasnova po osnovnih elementih CGP UL: rdeča, sivi toni
-# in ena sekundarna barva. Arial je nadomestna pisava, kadar Univerza Sans
-# ni nameščena.
+# Pisave Univerza Sans so vključene v projekt in registrirane za ta izris.
+FONT_DIR = Path(__file__).parent / "Univerza Sans TTF 0"
+for font_file in FONT_DIR.glob("*.ttf"):
+    register_font(str(font_file))
+
+# Barvna zasnova po barvni shemi UL: rdeča, antracit in ena sekundarna barva.
 UL_RED = "#E03127"
-UL_DARK = "#252525"
+UL_DARK = "#58595B"
 UL_GRAY = "#58595B"
 UL_LIGHT = "#E6E7E8"
 UL_BLUE = "#2878AC"
@@ -25,7 +29,7 @@ config.background_color = BG
 
 class VsotaKotov(Scene):
     def txt(self, text, size=30, color=UL_DARK, **kwargs):
-        text_mobject = Text(text, font="Arial", font_size=size, color=color, **kwargs)
+        text_mobject = Text(text, font="Univerza Sans", font_size=size, color=color, **kwargs)
         max_width = config.frame_width - 0.8
         if text_mobject.width > max_width:
             text_mobject.scale_to_fit_width(max_width)
@@ -368,7 +372,7 @@ class VsotaKotov(Scene):
             FadeIn(alpha_vrh_lok),
             run_time=1.2,
         )
-        self.wait(2.2)
+        self.wait(1.8)
 
         # 4. Frame: fokus na premici p, p′ in q; primerjamo kot γ z novokonstruiranim γ.
         self.play(
