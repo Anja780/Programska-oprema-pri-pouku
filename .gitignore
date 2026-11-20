@@ -14,3 +14,6 @@ settings.json
 .venv
 media
 __pycache__
+
+# Zvočni učinki, ki jih manim-demo/zvoki.py ustvari samodejno
+manim-demo/zvoki/
