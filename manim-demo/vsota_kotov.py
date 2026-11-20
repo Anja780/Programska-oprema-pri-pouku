@@ -66,13 +66,13 @@ class VsotaKotov(Scene):
         self.add_sound(str(pot_zvoka(ime, **parametri)), time_offset=zamik, gain=glasnost or None)
 
     def zvok_risanja(self, trajanje, intervali=None, gladko=False, zamik=0.0, glasnost=0, seme=0):
-        # Realističen zvok svinčnika po papirju za eno potezo; brez tonov.
+        # Mehak »vuš« za eno potezo (brez tonov in brez praskanja).
         pot = pot_risanja(trajanje, intervali, gladko, seme)
         self.add_sound(str(pot), time_offset=zamik, gain=glasnost or None)
 
     def zvok_risanja_lika(self, st_stranic, trajanje, glasnost=0, seme=0):
-        # Create riše lik v eni potezi po krivulji smooth. Ob vsakem oglišču pero za hip
-        # popusti (kratka tišina), tako se sliši vsaka stranica posebej.
+        # Create riše lik v eni potezi po krivulji smooth. Vsaka stranica dobi svoj mehak
+        # »vuš«, ob oglišču je kratek premor, tako se sliši vsaka stranica posebej.
         casi = np.linspace(0, 1, 2001)
         vrednosti = np.array([smooth(x) for x in casi])
         meje = [trajanje * float(np.interp(k / st_stranic, vrednosti, casi)) for k in range(st_stranic + 1)]
@@ -260,18 +260,12 @@ class VsotaKotov(Scene):
         ])
         # Naslov je viden že v prvi sličici (predogled na Instagramu ni prazen).
         self.add(naslov, uvod_1)
-        # Zvok risanja: vsaka od treh potez (črtkano – stranica – črtkano) ima svoj umirjen zvok
-        # flomastra. Med črticami se pero dvigne, zato je tam kratka tišina.
+        # Zvok risanja: vsaka od treh potez (črtkano – stranica – črtkano) dobi en mehak »vuš«.
         cas = 0.0
         for st_poteze, koraki in enumerate(vsi_koraki):
-            zacetek_poteze = cas
-            intervali = []
-            for crta, dolzina in koraki:
-                trajanje = dolzina / hitrost
-                if crta is not None:
-                    intervali.append((cas - zacetek_poteze, cas - zacetek_poteze + trajanje))
-                cas += trajanje
-            self.zvok_risanja(cas - zacetek_poteze, intervali, zamik=zacetek_poteze, seme=st_poteze)
+            trajanje_poteze = sum(dolzina for _, dolzina in koraki) / hitrost
+            self.zvok_risanja(trajanje_poteze, zamik=cas, seme=st_poteze)
+            cas += trajanje_poteze
         self.play(risanje)
         # Trije koti se pokažejo: trije poki, vsak malo višji.
         for i in range(3):
@@ -319,9 +313,7 @@ class VsotaKotov(Scene):
         oznaka_q = self.txt("q", size=OZNAKE).move_to((B + C) / 2 + normala_navzven(smer_BC, C) * 0.5)
 
         self.add(r_crta, q_crta, p_crta)
-        # Stranice se podaljšajo v tri premice hkrati: trije drsni toni kot akord.
-        for i in range(3):
-            self.zvok("pero", f0=ton(2 * i), f1=ton(2 * i + 2), trajanje=1.4, seme=4 + i, glasnost=-9, akcija=True)
+        # Stranice se podaljšajo v tri premice hkrati (brez zvoka).
         self.play(
             r_crta.animate.put_start_and_end_on(*r_konca),
             q_crta.animate.put_start_and_end_on(*q_konca),
@@ -358,11 +350,32 @@ class VsotaKotov(Scene):
                 lambda m, t: m.become(zacetni.copy().rotate(zasuk * t, about_point=od).shift((do - od) * t)),
             )
 
+        def utrip(oznaka, odsek_kota):
+            # Oznaka kota se poveča in zmanjša, njegov odsek se za hip močneje obarva.
+            return AnimationGroup(
+                oznaka.animate(rate_func=there_and_back).scale(1.5),
+                odsek_kota.animate(rate_func=there_and_back).set_fill(opacity=0.5),
+            )
+
+        def pojavi_z_utripom(oznaka, faktor=1.5):
+            # Nova oznaka zraste iz nič čez polno velikost in se ustali (enako kot utrip).
+            zacetna = oznaka.copy()
+
+            def velikost(t):
+                if t < 0.5:
+                    return 0.01 + (faktor - 0.01) * smooth(t / 0.5)
+                return faktor + (1 - faktor) * smooth((t - 0.5) / 0.5)
+
+            return UpdateFromAlphaFunc(oznaka, lambda m, t: m.become(zacetna.copy().scale(velikost(t))))
+
+        # Vsak kot ima svoj ton: isti ton pri spodnjem in zgornjem kotu pove, da gre za enak kot.
+        TON_ALPHA = ton(2)
+        TON_BETA = ton(4)
+
         ZATEMNJENO = 0.25
 
         # 3. Frame: fokus na premici p, p′ in r; primerjamo kot α z novokonstruiranim α.
         # Uvodno besedilo izgine v isti potezi, ko se q umakne v ozadje.
-        self.zvok("vetrc", trajanje=0.8, seme=3, glasnost=-12, akcija=True)
         self.play(
             FadeOut(naslov, uvod_1, vzporednica_txt),
             q.animate.set_opacity(ZATEMNJENO),
@@ -378,17 +391,19 @@ class VsotaKotov(Scene):
 
         razlaga_alpha_1 = self.txt("Ker sta p in p′ vzporedni,\nsta izmenična kota\nob premici r enaka.").move_to(UP * 4.3)
         razlaga_alpha_2 = self.txt("Torej je zgornji kot\nenak spodnjemu.").move_to(DOWN * 3.25)
-        self.zvok("iskrice")  # poudarek: nov kot α ob vrhu
-        self.zvok("pok", f1=1300, glasnost=-4)
-        self.play(Indicate(alpha_vrh, color=UL_RED), FadeIn(alpha_vrh), FadeIn(razlaga_alpha_1, razlaga_alpha_2), run_time=1.2)
-        self.wait(2.4)  # čas za branje: izmenična kota
-        self.zvok("vetrc", trajanje=1.5, seme=4, glasnost=-3, akcija=True)  # kot α potuje
-        self.zvok("ksilofon", zamik=1.45, f=ton(4), akcija=True)  # kot α pristane
+        self.play(FadeIn(razlaga_alpha_1), run_time=0.6)
+        self.zvok("kapljica", f=TON_ALPHA)  # spodnji α
+        self.play(utrip(alpha_dol, alpha_odsek), run_time=0.7)
+        self.wait(0.2)
+        self.zvok("kapljica", f=TON_ALPHA)  # zgornji α: isti ton, ker je enak
+        self.play(pojavi_z_utripom(alpha_vrh), FadeIn(razlaga_alpha_2), run_time=0.7)
+        self.wait(1.6)  # čas za branje: izmenična kota
+        self.zvok_risanja(1.5, gladko=True, seme=17)  # odsek α potuje (tih vuš)
+        self.zvok("potrditev", zamik=1.45, glasnost=-4)  # odsek se lepo poklopi: »pling-pling«
         self.play(prenesi_kot(alpha_odsek, zasuk_alpha, A, B), run_time=1.5)
         self.wait(0.6)
 
         # 4. Frame: fokus na premici p, p′ in q; primerjamo kot β z novokonstruiranim β.
-        self.zvok("vetrc", trajanje=1.2, seme=5, glasnost=-12, akcija=True)
         self.play(
             p.animate.set_opacity(1.0),
             pp.animate.set_opacity(1.0),
@@ -406,16 +421,16 @@ class VsotaKotov(Scene):
             run_time=1.2,
         )
         razlaga_gamma_1 = self.txt("Enako velja tudi\nza drugi par kotov.").move_to(UP * 4.3)
-        self.zvok("iskrice", glasnost=-4)
-        self.zvok("vetrc", trajanje=2.2, seme=6, glasnost=-3, akcija=True)  # kot β potuje
-        self.zvok("ksilofon", zamik=2.15, f=ton(6), akcija=True)  # kot β pristane
-        self.play(
-            prenesi_kot(gamma_odsek, zasuk_gamma, C, B),
-            FadeIn(gamma_vrh),
-            FadeIn(razlaga_gamma_1),
-            run_time=2.2,
-        )
-        self.zvok("vetrc", trajanje=1.2, seme=8, glasnost=-14, akcija=True)
+        self.play(FadeIn(razlaga_gamma_1), run_time=0.6)
+        self.zvok("kapljica", f=TON_BETA)  # spodnji β
+        self.play(utrip(gamma_dol, gamma_odsek), run_time=0.7)
+        self.wait(0.2)
+        self.zvok("kapljica", f=TON_BETA)  # zgornji β: isti ton, ker je enak
+        self.play(pojavi_z_utripom(gamma_vrh), run_time=0.7)
+        self.wait(0.4)
+        self.zvok_risanja(1.6, gladko=True, seme=18)  # odsek β potuje (tih vuš)
+        self.zvok("potrditev", zamik=1.55, glasnost=-4)  # odsek se lepo poklopi: »pling-pling«
+        self.play(prenesi_kot(gamma_odsek, zasuk_gamma, C, B), run_time=1.6)
         self.play(
             p.animate.set_opacity(1.0),
             pp.animate.set_opacity(1.0),
@@ -496,7 +511,7 @@ class VsotaKotov(Scene):
                 opacity=0.18 + dodatek * np.clip((preteceni_kot.get_value() * DEGREES - zacetek) / razpon, 0, 1)
             ))
 
-        self.zvok("drsenje", f0=250, f1=700, trajanje=0.9, glasnost=-4)  # napetost pred štetjem
+        self.zvok_risanja(0.9, gladko=True, seme=15)  # ravna črta zraste iz vrha
         self.play(
             zatemnjene_crte.animate.set_opacity(ZATEMNJENO),
             zatemnjene_oznake.animate.set_opacity(ZATEMNJENO),
@@ -515,12 +530,9 @@ class VsotaKotov(Scene):
         napolni_ob_prehodu(beta_odsek, razpon_alpha, razpon_srednji, dodatek=0.1)  # siva naj ne postane umazana
         napolni_ob_prehodu(gamma_odsek, razpon_alpha + razpon_srednji, razpon_desni)
         self.add(drsni_lok)
-        # Ksilofon pleza navzgor: ena nota na vsakih 20°, ob pravem času glede na hitrost kazalca.
-        _casi = np.linspace(0, 1, 2001)
-        _vrednosti = np.array([smooth(x) for x in _casi])
-        for k in range(1, 10):
-            self.zvok("ksilofon", zamik=2.4 * float(np.interp(k / 9, _vrednosti, _casi)),
-                      f=ton(k - 1), trajanje=0.35, glasnost=-5)
+        # Števec: tih »blip« na vsakih 5°, časovno po isti krivulji smooth kot kazalec,
+        # zato se tiki zgostijo, ko kazalec pospeši, in razredčijo, ko se ustavlja.
+        self.zvok("stevec", trajanje=2.4, koraki=36, glasnost=-8)
         self.play(preteceni_kot.animate.set_value(180), run_time=2.4, rate_func=smooth)
         for mobjekt in (alpha_odsek, beta_odsek, gamma_odsek, stevec, kazalec, konica_kazalca):
             mobjekt.clear_updaters()
@@ -616,17 +628,30 @@ class VsotaKotov(Scene):
         opis_pet = self.txt("Diagonali iz enega oglišča\nustvarita 3 trikotnike.").move_to(DOWN * 2.35)
         utemeljitev_pet = self.txt("Vsak prispeva 180°.", size=OZNAKE, weight="LIGHT").move_to(DOWN * 3.35)
 
-        self.zvok_risanja_lika(5, 1.0, seme=6)  # petkotnik: pet stranic
-        self.play(FadeIn(podvprasanje), Create(petkotnik), run_time=1.0)
+        # Petkotnik se nariše umirjeno; vsaka stranica dobi svoj mehak vuš.
+        self.zvok_risanja_lika(5, 1.6, seme=6)
+        self.play(FadeIn(podvprasanje), Create(petkotnik), run_time=1.6)
+        self.wait(0.4)
+        # Diagonali se narišeta druga za drugo, vsaka s svojim tihim vušem.
+        for i, diagonala in enumerate(diagonali):
+            self.zvok_risanja(0.8, gladko=True, seme=16 + 3 * i)
+            self.play(Create(diagonala), run_time=0.8)
         self.wait(0.3)
-        for i in range(2):  # dve diagonali hkrati
-            self.zvok("pero", f0=ton(2 + 2 * i), f1=ton(4 + 2 * i), trajanje=1.0, seme=8 + i, glasnost=-8, akcija=True)
-        for i in range(3):  # trije trikotniki
-            self.zvok("ksilofon", zamik=0.3 * i, f=ton(2 * i))
-        self.play(FadeIn(kosi), Create(diagonali), run_time=1.0)
-        self.wait(1.5)  # čas za branje uvodnega besedila ob že razdeljenem petkotniku
-        self.zvok("pok", f1=1200, glasnost=-8)
-        self.play(FadeOut(podvprasanje), FadeIn(opis_pet, utemeljitev_pet), run_time=0.6)
+        # Trikotniki se obarvajo v tekočem valu (vsak se začne, preden prejšnji konča).
+        # Mehka kapljica zazveni ob začetku vsakega trikotnika; toni se vzpenjajo.
+        cas_vala, zamik_vala = 1.8, 0.6
+        trajanje_kosa = cas_vala / (1 + zamik_vala * (len(trikotniki) - 1))
+        for i in range(len(trikotniki)):
+            self.zvok("kapljica", zamik=i * zamik_vala * trajanje_kosa + 0.08, f=ton(2 * i), glasnost=-2)
+        self.play(
+            LaggedStart(*[
+                AnimationGroup(FadeIn(ploskve_trikotnikov[i]), FadeIn(stevilke[i], scale=0.5))
+                for i in range(len(trikotniki))
+            ], lag_ratio=zamik_vala),
+            run_time=cas_vala,
+        )
+        self.wait(0.8)  # čas za branje uvodnega besedila ob že razdeljenem petkotniku
+        self.play(FadeOut(podvprasanje), FadeIn(opis_pet, utemeljitev_pet), run_time=0.8)
         self.wait(2.6)  # čas za branje: diagonale iz enega oglišča
 
         # Trikotnike ločimo iz petkotnika in jih pokažemo kot tri samostojne kose.
@@ -651,18 +676,18 @@ class VsotaKotov(Scene):
             smer_levo *= -1
 
         odmik_kosov = 0.45
-        self.zvok("vetrc", trajanje=1.2, seme=11, glasnost=-6, akcija=True)
+        self.zvok_risanja(1.5, gladko=True, seme=11)  # trikotniki se mehko razmaknejo
         self.play(
             kosi[0].animate.shift(smer_desno * odmik_kosov),
             kosi[2].animate.shift(smer_levo * odmik_kosov),
             FadeOut(petkotnik, diagonali, opis_pet, utemeljitev_pet),
-            run_time=1.2,
+            run_time=1.5,
         )
 
         # 9. Konkretni izračun za petkotnik.
         racun_pet = self.mat("3 · 180° = 540°", size=58).move_to(DOWN * 2.9)
-        self.zvok("zvoncek", zamik=0.5, glasnost=-4)
-        self.play(Write(racun_pet), run_time=0.8)
+        self.zvok("zvoncek", zamik=0.9, glasnost=-6)  # rezultat 540°, ko je zapis dokončan
+        self.play(Write(racun_pet), run_time=1.2)
         self.wait(1.3)  # čas za branje: 3 · 180° = 540°
 
         # 10. Število trikotnikov sledi vzorcu n - 2.

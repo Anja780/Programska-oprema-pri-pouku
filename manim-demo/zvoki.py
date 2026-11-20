@@ -153,6 +153,55 @@ def _pero(f0=523.25, f1=659.26, trajanje=0.5, seme=3):
     return (ton_ + 0.6 * flomaster) * ovojnica
 
 
+def _kapljica(f=659.26, trajanje=0.45):
+    # Mehka, »luštna« kapljica: ton hitro zdrsne od nižje višine na f in se mehko izzveni.
+    # Brez visokih prizvokov (kot jih ima ksilofon), zato ni oster.
+    t = _cas(trajanje)
+    frek = f * (1 - 0.35 * np.exp(-t / 0.018))
+    faza = 2 * np.pi * np.cumsum(frek) / SR
+    ovojnica = np.clip(t / 0.006, 0, 1) * np.exp(-t / 0.11)
+    return (np.sin(faza) + 0.12 * np.sin(2 * faza)) * ovojnica
+
+
+def _potrditev(f=1046.5, razmik=0.09, trajanje=0.6):
+    # »Pling-pling«: dve mehki kapljici navzgor (kvinta), ko se nekaj lepo poklopi.
+    t = _cas(trajanje)
+    izhod = np.zeros_like(t)
+    for i, (frek, jakost) in enumerate(((f, 0.8), (f * 1.5, 1.0))):
+        tt = np.clip(t - i * razmik, 0, None)
+        fr = frek * (1 - 0.3 * np.exp(-tt / 0.015))
+        faza = 2 * np.pi * np.cumsum(fr) / SR
+        ovojnica = (t >= i * razmik) * np.clip(tt / 0.005, 0, 1) * np.exp(-tt / 0.13)
+        izhod += jakost * (np.sin(faza) + 0.1 * np.sin(2 * faza)) * ovojnica
+    return izhod
+
+
+def _smooth(x, prevoj=10.0):
+    """Enaka krivulja kot Manimova rate_func smooth (za časovno usklajene zvoke)."""
+    sig = lambda v: 1.0 / (1.0 + np.exp(-v))
+    napaka = sig(-prevoj / 2)
+    return np.clip((sig(prevoj * (np.asarray(x) - 0.5)) - napaka) / (1 - 2 * napaka), 0, 1)
+
+
+def _stevec(trajanje=2.4, koraki=18, f0=520.0, f1=1040.0):
+    # Kratki mehki »blipi« (kot drobne kapljice), enakomerno po kotu (ne po času): kazalec, ki se
+    # giblje po smooth, se sliši hitreje na sredini in počasneje na koncu, višina raste s kotom.
+    casi = np.linspace(0, 1, 4001)
+    vrednosti = _smooth(casi)
+    t = _cas(trajanje + 0.1)
+    izhod = np.zeros_like(t)
+    for k in range(1, koraki + 1):
+        zac = trajanje * float(np.interp(k / koraki, vrednosti, casi))
+        f = f0 * (f1 / f0) ** (k / koraki)
+        tt = np.clip(t - zac, 0, None)
+        frek = f * (1 - 0.3 * np.exp(-tt / 0.01))
+        faza = 2 * np.pi * np.cumsum(frek * (t >= zac)) / SR
+        izhod += (t >= zac) * np.clip(tt / 0.004, 0, 1) * np.exp(-tt / 0.05) * (
+            np.sin(faza) + 0.1 * np.sin(2 * faza)
+        )
+    return izhod
+
+
 def _pasovni(signal, f, q):
     """Pasovno prepustni filter (biquad, RBJ) s središčem f in kakovostjo q."""
     w = 2 * np.pi * f / SR
@@ -171,11 +220,11 @@ def _pasovni(signal, f, q):
 
 
 def _risanje(trajanje, intervali=None, gladko=False, seme=0):
-    """Realističen svinčnik po papirju.
+    """Mehak »vuš« ob risanju črte ali lika (brez praskanja).
 
-    Grafit ne šumi enakomerno: zvok je gosto zaporedje drobnih praskov, ko konica drsi čez
-    papirna vlakna, z rahlim »tok« ob dotiku papirja. intervali: (začetek, konec) v sekundah,
-    ko se konica dotika papirja (vmes je dvignjena). gladko: hitrost (in glasnost) sledi smooth.
+    Vsak interval (začetek, konec) v sekundah dobi svoj val šuma, ki naraste in pojenja,
+    filter pa se ob tem odpre le do srednjih frekvenc, zato zvok ostane topel in tih.
+    gladko: vrh vala je pomaknjen proti sredini (kot pri animaciji smooth).
     """
     rng = np.random.default_rng(seme)
     t = _cas(trajanje)
@@ -183,50 +232,30 @@ def _risanje(trajanje, intervali=None, gladko=False, seme=0):
     if intervali is None:
         intervali = [(0.0, trajanje)]
 
-    # Dotik konice s papirjem (mehki robovi ob dvigu in spustu).
-    dotik = np.zeros(n)
+    oblika = np.zeros(n)
     for zac, kon in intervali:
         dolzina = max(kon - zac, 1e-3)
-        rob = min(0.008, dolzina / 3)
         del_ = (t >= zac) & (t <= kon)
-        tt = t[del_]
-        dotik[del_] = np.minimum(np.clip((tt - zac) / rob, 0, 1), np.clip((kon - tt) / rob, 0, 1))
+        x = (t[del_] - zac) / dolzina
+        vrh = 0.5 if gladko else 0.4
+        val = np.where(x < vrh, x / vrh, (1 - x) / (1 - vrh))
+        oblika[del_] = np.maximum(oblika[del_], np.sin(np.pi / 2 * np.clip(val, 0, 1)) ** 2)
 
-    # Hitrost poteze: ob gladki animaciji počasi na začetku in koncu.
-    hitrost = 0.4 + 0.6 * np.sin(np.pi * t / trajanje) ** 2 if gladko else np.ones(n)
-    # Pritisk roke niha počasi in nepravilno.
-    pritisk = _nizkoprepustni(rng.standard_normal(n), 5.0)
-    pritisk = 0.8 + 0.2 * pritisk / (np.max(np.abs(pritisk)) or 1.0)
-
-    # Drobni praski: naključni impulzi, gostejši pri večji hitrosti.
-    gostota = 2600.0 * hitrost * dotik / SR
-    zadetki = rng.random(n) < gostota
-    impulzi = np.zeros(n)
-    impulzi[zadetki] = rng.lognormal(0.0, 0.7, zadetki.sum()) * rng.choice([-1.0, 1.0], zadetki.sum())
-    praski = _pasovni(impulzi, 2400.0, 1.1) + 0.7 * _pasovni(impulzi, 4800.0, 1.6)
-
-    # Tih, enakomeren šum drsenja grafita pod praski.
+    # Filter se odpira skupaj z glasnostjo: od temnega šuma do največ ~1,4 kHz.
+    rezi = 180.0 + 1200.0 * oblika
     sum_ = rng.standard_normal(n)
-    drsenje = _pasovni(sum_, 3200.0, 0.9) * 0.18
-
-    # Mehek »tok« ob vsakem dotiku papirja.
-    dotiki = np.zeros(n)
-    for zac, _ in intervali:
-        i = int(zac * SR)
-        if i < n:
-            dotiki[i] = 2.5
-    tok = _pasovni(dotiki, 1500.0, 2.0)
-
-    return (praski + drsenje * hitrost) * dotik * pritisk + 0.5 * tok
+    pas = _nizkoprepustni(sum_, rezi) - _nizkoprepustni(sum_, 90.0)
+    pas = _nizkoprepustni(pas, rezi)  # strmejši rez: še mehkejši zvok
+    return pas * oblika
 
 
 def pot_risanja(trajanje, intervali=None, gladko=False, seme=0):
-    """Pot do WAV z zvokom risanja ene poteze (ustvari jo, če še ne obstaja)."""
+    """Pot do WAV z mehkim »vušem« za eno potezo ali lik (ustvari jo, če še ne obstaja)."""
     import hashlib
     opis = repr((round(trajanje, 4), [tuple(round(v, 4) for v in i) for i in (intervali or [])], gladko, seme))
-    pot = MAPA / f"svincnik_{hashlib.md5(opis.encode()).hexdigest()[:10]}.wav"
+    pot = MAPA / f"vus_{hashlib.md5(opis.encode()).hexdigest()[:10]}.wav"
     if not pot.exists():
-        _shrani(pot, _risanje(trajanje, intervali, gladko, seme), 0.3)
+        _shrani(pot, _risanje(trajanje, intervali, gladko, seme), 0.05)
     return pot
 
 
@@ -239,6 +268,9 @@ _RECEPTI = {
     "iskrice": (_iskrice, 0.4),
     "svincnik": (_svincnik, 0.25),
     "drsenje": (_drsenje, 0.35),
+    "stevec": (_stevec, 0.5),
+    "kapljica": (_kapljica, 0.55),
+    "potrditev": (_potrditev, 0.45),
 }
 
 
